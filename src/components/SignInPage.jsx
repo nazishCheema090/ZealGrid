@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // Import AuthContext
+
 import TT from "../assets/TT.svg";
 import ZealGrid from "../assets/ZealGrid.svg";
 import RadioButton from "../assets/RadioButton.svg";
@@ -6,21 +9,42 @@ import Eye from "../assets/Eye.svg"; // Importing the Eye icon
 
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const { signIn } = useAuth();
+  const navigate = useNavigate(); // Use navigate for redirection
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      await signIn(email, password);
+      console.log('Sign in successful');
+      navigate('/getStarted'); // Redirect to the protected route (e.g., home) after successful sign-in
+    } catch (error) {
+      setError('Failed to sign in');
+      console.error('Error signing in:', error);
+    }
+  };
 
   return (
     <div className="flex min-h-screen" style={{ backgroundColor: '#F9F9F9' }}>
       <div className="flex w-full max-w-screen-lg mx-auto p-8 relative">
         {/* Sign-In Form */}
         <div className="w-1/2 bg-white p-10 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-bold text-center mb-8">Sign in to Zeal Grid</h2>
-          <form>
-            <div className="relative mb-6">
+          <h2 className="text-3xl font-bold text-center mt-8 mb-8">Sign in <br /> to ZealGrid</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="relative mt-10 mb-10">
               <input
                 type="email"
                 id="email"
                 className="peer w-full px-4 py-2 border-b-2 border-gray-300 placeholder-transparent focus:outline-none focus:border-indigo-600"
                 placeholder="Email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <label
                 htmlFor="email"
@@ -29,13 +53,15 @@ const SignInPage = () => {
                 Email
               </label>
             </div>
-            <div className="relative mb-6">
+            <div className="relative mt-10 mb-10">
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="password"
                 className="peer w-full px-4 py-2 border-b-2 border-gray-300 placeholder-transparent focus:outline-none focus:border-indigo-600"
                 placeholder="Password"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <label
                 htmlFor="password"
@@ -52,20 +78,18 @@ const SignInPage = () => {
                 height="24"
               />
             </div>
+            {error && <p className="text-red-500 text-center">{error}</p>}
             <div className="text-right mb-6">
               <a href="#" className="text-indigo-600 hover:underline">Forgot Password?</a>
             </div>
-            <div className="mb-6 text-center">
+            <div className="mt-8 mb-6 text-center">
               <button
                 type="submit"
-                className="w-full py-3 bg-indigo-600 text-white rounded-full text-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="w-40 py-3 bg-indigo-600 text-white rounded-full text-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               >
                 Sign in
               </button>
             </div>
-            <p className="text-center text-sm text-gray-600">
-              Don't have an account? <a href="#" className="text-indigo-600 hover:underline">Create an account</a>
-            </p>
           </form>
         </div>
         
