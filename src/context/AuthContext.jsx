@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { auth } from '../config/firebaseConfig'; // Import the Firebase authentication module
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth'; // Import necessary Firebase auth functions
+import PropTypes from 'prop-types';
+
 
 // Create a context for authentication
 const AuthContext = React.createContext();
@@ -11,7 +13,7 @@ export const useAuth = () => {
 };
 
 // AuthProvider component to wrap the application and provide auth state
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({children}) => {
   // State to store the current user
   const [currentUser, setCurrentUser] = useState(null);
   // State to handle loading state
@@ -49,7 +51,13 @@ export const AuthProvider = ({ children }) => {
   return (
     // Provide the auth state and functions to the rest of the application
     <AuthContext.Provider value={value}>
-      {!loading && children} {/* Render children only when loading is complete */}
+      {!loading } { children/* Render children only when loading is complete */}
     </AuthContext.Provider>
   );
+};
+
+
+// Define PropTypes for AuthProvider
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
