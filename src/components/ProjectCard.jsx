@@ -1,19 +1,36 @@
 // src/components/ProjectCard.js
 
-import PropTypes from 'prop-types'; // Import prop-types
-import ZealGridLogo from '../assets/ZealGrid.svg'; // Import the ZealGrid logo
+import PropTypes from 'prop-types';
+import ZealGridLogo from '../assets/ZealGrid.svg';
+import AddIcon from '@mui/icons-material/Add';
 
 const ProjectCard = ({ project }) => {
+  const gradientStyle = {
+    background: 'linear-gradient(to right, #7065F0, rgba(64, 58, 138, 0.7))',
+  };
+
   return (
-    <div className="w-full h-48 bg-gradient-to-r from-purple-500 to-indigo-600 flex flex-col items-center justify-center rounded-lg shadow-lg p-4">
-      <img
-        src={ZealGridLogo}
-        alt={project.name}
-        className="w-12 h-12 mb-4"
-      />
-      <h4 className="text-white text-lg font-semibold mb-1">{project.name}</h4>
-      {!project.isAddProject && (
-        <p className="text-gray-200 text-sm">{project.description}</p>
+    <div
+      className="flex flex-col items-center justify-center rounded-lg shadow-lg p-4 transition-transform transform hover:scale-105 hover:shadow-xl"
+      style={{ ...gradientStyle, width: '100%', height: '200px' }}
+    >
+      {project.isAddProject ? (
+        <div className="flex flex-col items-center justify-center">
+          <AddIcon className="w-12 h-12 mb-2 text-white" />
+          <h4 className="text-white text-lg font-semibold">Add Project</h4>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center">
+          <div className="w-16 h-16 flex items-center justify-center bg-white rounded-full mb-4">
+            <img
+              src={ZealGridLogo}
+              alt={project.name}
+              className="w-12 h-12"
+            />
+          </div>
+          <h4 className="text-white text-lg font-semibold mb-1">{project.name}</h4>
+          <p className="text-white text-sm">{project.description}</p>
+        </div>
       )}
     </div>
   );

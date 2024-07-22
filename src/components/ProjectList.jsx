@@ -1,13 +1,13 @@
 // src/components/ProjectList.js
 
-import PropTypes from 'prop-types'; // Import prop-types
+import PropTypes from 'prop-types';
 import ProjectCard from './ProjectCard';
 
 const ProjectList = ({ projects }) => {
   return (
-    <div className="flex flex-wrap -mx-4">
+    <div className="flex flex-wrap justify-center gap-4 p-4">
       {projects.map((project) => (
-        <div key={project.id} className="flex-grow max-w-xs p-4">
+        <div key={project.id} className="flex-shrink-0 w-64">
           <ProjectCard project={project} />
         </div>
       ))}
