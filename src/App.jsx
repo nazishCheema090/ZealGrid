@@ -1,9 +1,8 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import SignInPage from './components/SignInPage';
-import GetStartedPage from './components/GetStarted';
-import Home from './components/Home';
+import SignInPage from './pages/SignInPage';
+import GetStartedPage from './pages/GetStarted';
+import Home from './pages/Home';
 import PrivateRoute from './components/PrivateRoute';
 
 const App = () => {
