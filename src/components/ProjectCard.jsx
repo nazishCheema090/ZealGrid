@@ -3,6 +3,7 @@
 import PropTypes from 'prop-types';
 import ZealGridLogo from '../assets/ZealGrid.svg';
 import AddIcon from '@mui/icons-material/Add';
+import { Link } from 'react-router-dom';
 
 const ProjectCard = ({ project }) => {
   const gradientStyle = {
@@ -10,9 +11,10 @@ const ProjectCard = ({ project }) => {
   };
 
   return (
-    <div
+    <Link
+      to={project.isAddProject ? "/add-project" : "#"}
       className="flex flex-col items-center justify-center rounded-lg shadow-lg p-4 transition-transform transform hover:scale-105 hover:shadow-xl"
-      style={{ ...gradientStyle, width: '100%', height: '200px' }}
+      style={{ ...gradientStyle, width: '100%', height: '200px', textDecoration: 'none' }}
     >
       {project.isAddProject ? (
         <div className="flex flex-col items-center justify-center">
@@ -32,7 +34,7 @@ const ProjectCard = ({ project }) => {
           <p className="text-white text-sm">{project.description}</p>
         </div>
       )}
-    </div>
+    </Link>
   );
 };
 
