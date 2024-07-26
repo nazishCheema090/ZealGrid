@@ -1,22 +1,12 @@
-import { useState, useEffect } from 'react';
-import { TextField, CircularProgress, Button, Paper } from '@mui/material';
+import { TextField,  Button, Paper } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 
 const CreateProject = () => {
-  const [companyID, setCompanyID] = useState('');
+  
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Simulate fetching company ID from the database
-    setTimeout(() => {
-      setCompanyID('Netflix-website-7uasrf65');
-    }, 1000);
-  }, []);
-
-  const handleNextClick = () => {
-    navigate('/add-project2'); // Navigate to step 2
-  };
+  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100 font-poppins">
@@ -36,23 +26,29 @@ const CreateProject = () => {
         <div className="ml-20">
           {/* Step Info and Progress Bar */}
           <div className="mb-6">
-            <p className="text-xl text-gray-600 mb-3">Step 1 of 2</p>
+            <p className="text-xl text-gray-600 mb-3">Step 2 of 2</p>
             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-              <div className="bg-purple-500 h-2 rounded-full" style={{ width: '50%' }}></div>
+              <div className="bg-purple-500 h-2 rounded-full" style={{ width: '100%' }}></div>
             </div>
           </div>
 
           {/* Instructions */}
           <div className="mb-6">
-            <p className="text-2xl text-gray-700 font-semibold my-3 leading-tight">{`Let's Start with the name of your project `}</p>
+            <p className="text-2xl text-gray-700 font-semibold my-3 leading-tight">{`Enter the data of your project `}</p>
           </div>
 
           {/* Form */}
           <div className="mb-12">
+
+          <div className='flex items-center mt-5'>
+              <label className="block text-gray-600 mr-5">Full Name</label>
+            </div>
+            <div className='flex'>
+            <div className='mr-5'>
             <TextField
               fullWidth
               variant="standard"
-              label="Full Name"
+              label="Email"
               InputLabelProps={{
                 className: "text-gray-600"
               }}
@@ -61,14 +57,28 @@ const CreateProject = () => {
               }}
               className="mb-8"
             />
+            </div>
 
-            <div className='flex items-center mt-3'>
-              <label className="block text-gray-600 mr-5">Project ID</label>
-              {companyID ? (
-                <p className="text-gray-800">{companyID}</p>
-              ) : (
-                <CircularProgress size={24} />
-              )}
+              <div className='ml-5'>
+            <TextField
+              fullWidth
+              variant="standard"
+              label="Company Id"
+              InputLabelProps={{
+                className: "text-gray-600"
+              }}
+              InputProps={{
+                className: "text-gray-800"
+              }}
+              className="mb-8"
+            />
+            </div>
+            </div>
+
+            
+
+            <div className='flex items-center mt-5'>
+              <label className="block text-gray-600 mr-5">Company Name</label>
             </div>
           </div>
 
@@ -81,9 +91,8 @@ const CreateProject = () => {
               variant="contained"
               className="text-white text-lg rounded-full py-3 px-8 shadow-md hover:bg-blue-600 focus:outline-none transition"
               style={{ backgroundColor: '#7065F0', width: '150px', height: '50px', borderRadius: '25px' }}
-              onClick={handleNextClick}
             >
-              Next
+              Continue
             </Button>
           </div>
       </Paper>
