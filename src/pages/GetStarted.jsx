@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ZealGridLogo from '../assets/ZealGrid.svg'; // Adjust the path to your SVG file
 
