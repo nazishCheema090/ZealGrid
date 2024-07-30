@@ -1,5 +1,7 @@
-import { createContext, useContext, useState } from 'react';
+// src/context/ProjectContext.js
+import { createContext, useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Create a context for the project
 const ProjectContext = createContext();
@@ -9,22 +11,45 @@ export const useProject = () => useContext(ProjectContext);
 
 // ProjectProvider component that wraps its children with ProjectContext.Provider
 export const ProjectProvider = ({ children }) => {
-  // State to keep track of the current step
+  const navigate = useNavigate(); // Use useNavigate hook for navigation
   const [step, setStep] = useState(1);
+  const [fullName, setFullName] = useState('');
+  const location = useLocation(); // Get the current location
+  // const [projectData, setProjectData] = useState({});
 
-  // Function to go to the next step
+  useEffect(() => {
+    const handlePopState = () => {
+      if (step > 1) {
+        setStep((prevStep) => prevStep - 1);
+      } else {
+        navigate('/home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [step, navigate]);
+
   const nextStep = () => {
     setStep(step + 1);
+    navigate(location.pathname); // Update the URL without pushing to the history stack
   };
 
-  // Function to go to the previous step
   const prevStep = () => {
-    setStep(step - 1);
+    if (step === 1) {
+      navigate('/home');
+    } else {
+      setStep(step - 1);
+      navigate(location.pathname); // Update the URL without pushing to the history stack
+    }
   };
 
   // Provide the current step and functions to navigate steps to the context consumers
   return (
-    <ProjectContext.Provider value={{ step, nextStep, prevStep }}>
+    <ProjectContext.Provider value={{ step, nextStep, prevStep, fullName, setFullName, setStep }}>
       {children}
     </ProjectContext.Provider>
   );
