@@ -10,8 +10,8 @@ import CreateProject from './pages/CreateProject';
 const App = () => {
   return (
     <AuthProvider>
-      <ProjectProvider>
-        <Router>
+      <Router>
+        <ProjectProvider>
           <Routes>
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/" element={<PrivateRoute />}>
@@ -20,8 +20,8 @@ const App = () => {
               <Route path="/add-project" element={<CreateProject />} />
             </Route>
           </Routes>
-        </Router>
-      </ProjectProvider>
+        </ProjectProvider>
+      </Router>
     </AuthProvider>
   );
 };
