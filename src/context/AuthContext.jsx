@@ -1,22 +1,20 @@
-import React, { useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { auth } from '../config/firebaseConfig'; // Import the Firebase authentication module
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth'; // Import necessary Firebase auth functions
 import PropTypes from 'prop-types';
 
-
 // Create a context for authentication
-const AuthContext = React.createContext();
+const AuthContext = createContext();
 
 // Custom hook to use the AuthContext
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
 
 // AuthProvider component to wrap the application and provide auth state
-export const AuthProvider = ({children}) => {
-  // State to store the current user
-  const [currentUser, setCurrentUser] = useState(null);
-  // State to handle loading state
+export const AuthProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState(() => {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
+  });
   const [loading, setLoading] = useState(true);
 
   // Function to handle user sign-in
@@ -26,14 +24,22 @@ export const AuthProvider = ({children}) => {
 
   // Function to handle user sign-out
   const signOut = () => {
-    return firebaseSignOut(auth);
+    return firebaseSignOut(auth).then(() => {
+      setCurrentUser(null);
+      localStorage.removeItem('currentUser');
+    });
   };
 
-  // useEffect to manage the authentication state
   useEffect(() => {
     // Listen for authentication state changes
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log('Auth state changed: ', user);
       setCurrentUser(user); // Set the current user
+      if (user) {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+      } else {
+        localStorage.removeItem('currentUser');
+      }
       setLoading(false); // Set loading to false once auth state is determined
     });
 
@@ -49,15 +55,16 @@ export const AuthProvider = ({children}) => {
   };
 
   return (
-    // Provide the auth state and functions to the rest of the application
     <AuthContext.Provider value={value}>
-      {!loading } { children/* Render children only when loading is complete */}
+      {!loading && children /* Render children only when loading is complete */}
+      {loading && <div>Loading...</div>}
     </AuthContext.Provider>
   );
 };
-
 
 // Define PropTypes for AuthProvider
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
+
+export default AuthProvider;
