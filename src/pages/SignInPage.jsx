@@ -1,11 +1,10 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // Import AuthContext
-
 import TT from "../assets/TT.svg";
 import ZealGrid from "../assets/ZealGrid.svg";
 import RadioButton from "../assets/RadioButton.svg";
-import Eye from "../assets/Eye.svg"; // Importing the Eye icon
+import { Visibility, VisibilityOff } from '@mui/icons-material'; // Importing Material-UI icons
 
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -69,18 +68,21 @@ const SignInPage = () => {
               >
                 Password
               </label>
-              <img
-                src={Eye}
-                alt="Show/Hide Password"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 cursor-pointer"
-                width="24"
-                height="24"
-              />
+              {showPassword ? (
+                <VisibilityOff
+                  className="absolute right-3 top-3 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              ) : (
+                <Visibility
+                  className="absolute right-3 top-3 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              )}
             </div>
             {error && <p className="text-red-500 text-center">{error}</p>}
             <div className="text-right mb-6">
-              <a href="#" className="text-indigo-600 hover:underline">Forgot Password?</a>
+              <a href="" className="text-indigo-600 hover:underline">Forgot Password?</a>
             </div>
             <div className="mt-8 mb-6 text-center">
               <button
