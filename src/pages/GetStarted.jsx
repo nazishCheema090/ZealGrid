@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import ZealGridLogo from '../assets/ZealGrid.svg'; // Adjust the path to your SVG file
+import ZealGridLogo from '../assets/ZealGrid.svg';
 
 const GetStartedPage = () => {
   const navigate = useNavigate();
 
   const handleGetStarted = () => {
-    navigate('/home'); // Redirect to home or another page
+    navigate('/home'); 
   };
 
   
