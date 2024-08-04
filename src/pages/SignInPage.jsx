@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Import AuthContext
+import { useAuth } from '../context/AuthContext'; 
 import TT from "../assets/TT.svg";
 import ZealGrid from "../assets/ZealGrid.svg";
 import RadioButton from "../assets/RadioButton.svg";
-import { Visibility, VisibilityOff } from '@mui/icons-material'; // Importing Material-UI icons
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
 
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { signIn } = useAuth();
-  const navigate = useNavigate(); // Use navigate for redirection
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
+  const [open, setOpen] = useState(false); 
+  const { signIn, resetPassword } = useAuth();
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,18 +23,26 @@ const SignInPage = () => {
 
     try {
       await signIn(email, password);
-      console.log('Sign in successful');
-      navigate('/getStarted'); // Redirect to the protected route (e.g., home) after successful sign-in
+      navigate('/getStarted'); 
     } catch (error) {
       setError('Failed to sign in');
-      console.error('Error signing in:', error);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    try {
+      await resetPassword(forgotPasswordEmail);
+      setForgotPasswordEmail('');
+      setOpen(false);
+      alert('Password reset email sent');
+    } catch (error) {
+      setError('Failed to reset password');
     }
   };
 
   return (
     <div className="flex min-h-screen" style={{ backgroundColor: '#F9F9F9' }}>
       <div className="flex w-full max-w-screen-lg mx-auto p-8 relative">
-        {/* Sign-In Form */}
         <div className="w-1/2 bg-white p-10 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold text-center mt-8 mb-8">Sign in <br /> to ZealGrid</h2>
           <form onSubmit={handleSubmit}>
@@ -82,7 +93,7 @@ const SignInPage = () => {
             </div>
             {error && <p className="text-red-500 text-center">{error}</p>}
             <div className="text-right mb-6">
-              <a href="" className="text-indigo-600 hover:underline">Forgot Password?</a>
+              <button type="button" className="text-indigo-600 hover:underline" onClick={() => setOpen(true)}>Forgot Password?</button>
             </div>
             <div className="mt-8 mb-6 text-center">
               <button
@@ -95,7 +106,6 @@ const SignInPage = () => {
           </form>
         </div>
         
-        {/* Right Side with SVGs */}
         <div className="w-1/2 relative flex items-center justify-center">
           <div className="absolute" style={{ top: '20px', left: '70%', transform: 'rotate(-10.45deg)' }}>
             <img src={TT} alt="TT SVG" style={{ width: '162.87px', height: '112.46px' }} />
@@ -108,6 +118,29 @@ const SignInPage = () => {
           </div>
         </div>
       </div>
+
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Reset Password</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Email Address"
+            type="email"
+            fullWidth
+            value={forgotPasswordEmail}
+            onChange={(e) => setForgotPasswordEmail(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleForgotPassword} color="primary">
+            Reset Password
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
