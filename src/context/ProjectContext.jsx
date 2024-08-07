@@ -15,7 +15,7 @@ export const ProjectProvider = ({ children }) => {
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState('');
   const location = useLocation(); // Get the current location
-  // const [projectData, setProjectData] = useState({});
+  
 
   useEffect(() => {
     const handlePopState = () => {

@@ -2,8 +2,9 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Paper } from '@mui/material';
 import { useProject } from '../context/ProjectContext';
-import Step1 from '../components/AddProject1';
-import Step2 from '../components/AddProject2';
+import AddProject1 from '../components/AddProject1';
+import AddProject2 from '../components/AddProject2';
+import AddProject3 from '../components/AddProject3';
 import Loading from '../components/Loading';
 
 const CreateProject = () => {
@@ -11,7 +12,7 @@ const CreateProject = () => {
 
   return (
     <>
-      {step === 3 ? (
+      {step === 4 ? (
         <Loading projectName={fullName}/>
       ) : (
         <div className="flex justify-center items-center h-screen bg-gray-100 font-poppins">
@@ -28,8 +29,9 @@ const CreateProject = () => {
             </div>
 
             {/* Conditional Rendering of Steps */}
-            {step === 1 && <Step1 nextStep={nextStep} />}
-            {step === 2 && <Step2 nextStep={nextStep} />}
+            {step === 1 && <AddProject1 nextStep={nextStep} />}
+            {step === 2 && <AddProject2 nextStep={nextStep} />}
+            {step === 3 && <AddProject3 nextStep={nextStep} />}
           </Paper>
         </div>
       )}

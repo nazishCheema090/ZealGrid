@@ -1,19 +1,13 @@
-import { useState, useEffect } from 'react';
-import { TextField, CircularProgress, Button } from '@mui/material';
+import { useState } from 'react';
+import { TextField, Button } from '@mui/material';
 import { useProject } from '../context/ProjectContext';
 import PropTypes from 'prop-types'; // Import prop-types
 
 const Step1 = ({ nextStep }) => {
   const { setFullName } = useProject();
-  const [companyID, setCompanyID] = useState('');
   const [fullName, setLocalFullName] = useState('');
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    setTimeout(() => {
-      setCompanyID('Netflix-website-7uasrf65');
-    }, 1000);
-  }, []);
 
   const handleNextClick = () => {
     if (fullName.trim() === '') {
@@ -28,13 +22,13 @@ const Step1 = ({ nextStep }) => {
     <div>
       <div className="ml-20">
         <div className="mb-6">
-          <p className="text-xl text-gray-600 mb-3">Step 1 of 2</p>
+          <p className="text-xl text-gray-600 mb-3">Step 1 of 3</p>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-            <div className="bg-purple-500 h-2 rounded-full" style={{ width: '50%' }}></div>
+            <div className="bg-purple-500 h-2 rounded-full" style={{ width: '33%' }}></div>
           </div>
         </div>
         <div className="mb-6">
-          <p className="text-2xl text-gray-700 font-semibold my-3 leading-tight">{`Let's Start with the name of your project `}</p>
+          <p className="text-2xl text-gray-700 font-semibold my-3 leading-tight">{`Let's Start with the name of your Application `}</p>
         </div>
         <div className="mb-12">
           <TextField
@@ -49,14 +43,7 @@ const Step1 = ({ nextStep }) => {
             error={Boolean(error)}
             helperText={error}
           />
-          <div className='flex items-center mt-3'>
-            <label className="block text-gray-600 mr-5">Project ID</label>
-            {companyID ? (
-              <p className="text-gray-800">{companyID}</p>
-            ) : (
-              <CircularProgress size={24} />
-            )}
-          </div>
+          
         </div>
       </div>
       <div className="flex justify-center">
