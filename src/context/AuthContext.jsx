@@ -36,11 +36,23 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        localStorage.setItem('currentUser', JSON.stringify(user));
+        try {
+          const token = await user.getIdToken(true);
+          if (token) {
+            setCurrentUser(user);
+            localStorage.setItem('currentUser', JSON.stringify(user));
+          } else {
+            setCurrentUser(null);
+            localStorage.removeItem('currentUser');
+          }
+        } catch (error) {
+          setCurrentUser(null);
+          localStorage.removeItem('currentUser');
+        }
       } else {
+        setCurrentUser(null);
         localStorage.removeItem('currentUser');
       }
       setLoading(false);
@@ -55,30 +67,6 @@ export const AuthProvider = ({ children }) => {
     signOut,
     resetPassword,
   };
-
-  // this use effect checks for validate user
-  useEffect(() => {
-    const validateUser = async () => {
-      try {
-        const user = JSON.parse(localStorage.getItem('currentUser'));
-        if (user) {
-          const token = await user.getIdToken(true);
-          if (token) {
-            setCurrentUser(user);
-          } else {
-            setCurrentUser(null);
-            localStorage.removeItem('currentUser');
-          }
-        }
-      } catch (error) {
-        setCurrentUser(null);
-        localStorage.removeItem('currentUser');
-      }
-      setLoading(false);
-    };
-    validateUser();
-  }, []);
-  
 
   return (
     <AuthContext.Provider value={value}>
