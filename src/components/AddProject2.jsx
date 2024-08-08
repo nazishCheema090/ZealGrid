@@ -2,27 +2,43 @@
 import { Button } from "@mui/material";
 import { useProject } from "../context/ProjectContext";
 import CheckBox from "./CheckBox";
-import { useState } from "react";
+import {useEffect, useState } from "react";
+import PropTypes from 'prop-types'
 
-const Step2 = () => {
-  const { fullName, nextStep } = useProject();
+const Step2 = ({projectName, onCheckBoxChange,features}) => {
+  const { nextStep } = useProject();
 
-  const [labels, setlabels] = useState(true);
-  const [navigation, setNavigation] = useState(true);
-  const [toogles, setToogles] = useState(true);
+  const [labels, setLabels] = useState(false);
+  const [navigation, setNavigation] = useState(false);
+  const [toogles, setToogles] = useState(false);
 
-  const handleLabels = () => {
-    return setlabels((prev) => !prev);
+  const handleLabels = (event) => {
+    setLabels((prev) => !prev);
+    // console.log(e.target.checked)
+    const { name, checked } = event.target;
+    onCheckBoxChange(name, checked);
   };
-  const handleNavigation = () => {
-    return setNavigation((prev) => !prev);
+  const handleNavigation = (event) => {
+    const { name, checked } = event.target;
+    onCheckBoxChange(name, checked);
+    setNavigation((prev) => !prev);
   };
-  const handleToogles = () => {
-    return setToogles((prev) => !prev);
+  const handleToogles = (event) => {
+    const { name, checked } = event.target;
+    onCheckBoxChange(name, checked);
+    setToogles((prev) => !prev);
   };
-  const handleClick = () => {
-    nextStep(); // Change step to 4 to render the Loading component
+
+
+  const handleClick = () => {  
+    nextStep(); 
   };
+
+  useEffect(() => {
+    setLabels(features.labels || false);
+    setNavigation(features.navigation || false);
+    setToogles(features.toggles || false);
+  }, [features]);
 
   return (
     <div>
@@ -37,11 +53,11 @@ const Step2 = () => {
           </div>
         </div>
         <div className="mb-6">
-          <p className="text-2xl text-gray-700 font-semibold my-3 leading-tight">{`Enter the data for ${fullName} features you want to control`}</p>
+          <p className="text-2xl text-gray-700 font-semibold my-3 leading-tight">{`Enter the data for ${projectName} features you want to control`}</p>
         </div>
         <div className="mb-12">
           <div className="flex items-center mt-5">
-            <label className="block text-gray-600 mr-5">{fullName}</label>
+            <label className="block text-gray-600 mr-5">{projectName}</label>
           </div>
 
           {/* toogles */}
@@ -54,6 +70,7 @@ const Step2 = () => {
               <CheckBox
                 value={labels}
                 label={"Labels"}
+                name={'labels'}
                 onChange={handleLabels}
               />
             </li>
@@ -61,6 +78,7 @@ const Step2 = () => {
               <CheckBox
                 value={navigation}
                 label={"Navigation"}
+                name={'navigation'}
                 onChange={handleNavigation}
               />
             </li>
@@ -68,6 +86,7 @@ const Step2 = () => {
               <CheckBox
                 value={toogles}
                 label={"Toogles"}
+                name={'toogles'}
                 onChange={handleToogles}
               />
             </li>
@@ -94,3 +113,10 @@ const Step2 = () => {
 };
 
 export default Step2;
+
+
+Step2.propTypes = {
+  onCheckBoxChange: PropTypes.func.isRequired,
+  projectName: PropTypes.string.isRequired,
+  features: PropTypes.object.isRequired,
+}

@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TextField, Button } from '@mui/material';
-import { useProject } from '../context/ProjectContext';
 import PropTypes from 'prop-types'; // Import prop-types
 
-const Step1 = ({ nextStep }) => {
-  const { setFullName } = useProject();
+const Step1 = ({ nextStep, setProjectName,projectName}) => {
+
+  
+
   const [fullName, setLocalFullName] = useState('');
   const [error, setError] = useState('');
 
@@ -14,9 +15,16 @@ const Step1 = ({ nextStep }) => {
       setError('Full Name is required');
       return;
     }
-    setFullName(fullName);
+    setProjectName(fullName);
+    
     nextStep();
   };
+
+  useEffect(()=>{
+    setLocalFullName(projectName || '')
+  },[projectName])
+
+
 
   return (
     <div>
@@ -66,4 +74,6 @@ export default Step1;
 
 Step1.propTypes ={
   nextStep: PropTypes.func.isRequired,
+  setProjectName: PropTypes.func.isRequired,
+  projectName: PropTypes.string.isRequired
 };
