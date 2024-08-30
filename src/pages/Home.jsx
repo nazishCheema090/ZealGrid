@@ -1,12 +1,18 @@
 // src/pages/Home.js
 
-import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
 import UserDetails from '../components/UserDetails';
 import ProjectList from '../components/ProjectList';
+import {useSelector, useDispatch} from 'react-redux';
+import {signOut} from '../features/auth/authSlice';
 
 const Home = () => {
-  const { currentUser, signOut } = useAuth();
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state)=>state.auth.currentUser);
+
+  const handleSignOut = () =>{
+    dispatch(signOut())
+  }
 
   // Array of project data
   const projects = [
@@ -66,7 +72,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-white p-8">
       <div className="max-w-7xl mx-auto">
-        <Header currentUser={currentUser} signOut={signOut} />
+        <Header currentUser={currentUser} signOut={handleSignOut} />
         <UserDetails currentUser={currentUser} />
         <div className="mb-6">
           <h3 className="text-xl font-bold text-gray-800">Your Zeal Grid Projects</h3>

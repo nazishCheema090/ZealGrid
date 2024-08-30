@@ -1,10 +1,9 @@
 // src/components/PrivateRoute.js
 
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-
+import {useSelector} from 'react-redux';
 const PrivateRoute = () => {
-  const { currentUser } = useAuth();
+  const currentUser = useSelector((state)=> state.auth.currentUser);
   
   // console.log('PrivateRoute currentUser: ', currentUser);
 

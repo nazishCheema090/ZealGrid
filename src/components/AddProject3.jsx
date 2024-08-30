@@ -8,6 +8,8 @@ export default function AddProject3({ handleSave, email, setEmail, companyName, 
     setPhone(e.target.value);
   }
 
+  // todo: handling all email, phone number and company name (company details states) in this component instead of passing them through the props 
+
   return (
     <div>
       <div className="ml-20">

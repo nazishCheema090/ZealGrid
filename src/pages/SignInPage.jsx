@@ -1,37 +1,49 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; 
 import TT from "../assets/TT.svg";
 import ZealGrid from "../assets/ZealGrid.svg";
 import RadioButton from "../assets/RadioButton.svg";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
+import {useDispatch, useSelector } from 'react-redux';
+import { signIn,resetPassword } from '../features/auth/authSlice';
+
+
+
 
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [open, setOpen] = useState(false); 
-  const { signIn, resetPassword } = useAuth();
-  const navigate = useNavigate(); 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
+  const {currentUser, error, loading} = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/getStarted');
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
 
     try {
-      await signIn(email, password);
+      await dispatch(signIn({email,password})).unwrap()
       navigate('/getStarted'); 
-    } catch (error) {
-      setError('Failed to sign in');
+    } catch (err) {
+      console.log(err);
+      alert('Failed to sign-In');
+      
     }
   };
 
   const handleForgotPassword = async () => {
     try {
-      await resetPassword(forgotPasswordEmail);
+      await dispatch(resetPassword(forgotPasswordEmail)).unwrap();
       setForgotPasswordEmail('');
       setOpen(false);
       alert('Password reset email sent');

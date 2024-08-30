@@ -1,12 +1,14 @@
 // components/AddProject2.js
 import { Button } from "@mui/material";
-import { useProject } from "../context/ProjectContext";
 import CheckBox from "./CheckBox";
 import {useEffect, useState } from "react";
+import {useDispatch, useSelector} from 'react-redux';
+import { setFeatures, setStep } from '../features/project/projectSlice';
 import PropTypes from 'prop-types'
 
 const Step2 = ({projectName, onCheckBoxChange,features}) => {
-  const { nextStep } = useProject();
+  const dispatch = useDispatch();
+  const step = useSelector((state)=> state.project.step);
 
   const [labels, setLabels] = useState(false);
   const [navigation, setNavigation] = useState(false);
@@ -14,24 +16,27 @@ const Step2 = ({projectName, onCheckBoxChange,features}) => {
 
   const handleLabels = (event) => {
     setLabels((prev) => !prev);
-    // console.log(e.target.checked)
     const { name, checked } = event.target;
+    setLabels(checked)
     onCheckBoxChange(name, checked);
+    dispatch(setFeatures({...features,labels: checked}));
   };
   const handleNavigation = (event) => {
     const { name, checked } = event.target;
+    setNavigation(checked);
     onCheckBoxChange(name, checked);
-    setNavigation((prev) => !prev);
+    dispatch(setFeatures({...features, navigation : checked}));
   };
   const handleToogles = (event) => {
     const { name, checked } = event.target;
+    setToogles(checked);
     onCheckBoxChange(name, checked);
-    setToogles((prev) => !prev);
+    dispatch(setFeatures({...features, toogles : checked}));
   };
 
 
   const handleClick = () => {  
-    nextStep(); 
+    dispatch(setStep(step + 1));
   };
 
   useEffect(() => {
