@@ -1,14 +1,16 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Paper } from '@mui/material';
 import AddProject1 from '../components/AddProject1';
 import AddProject2 from '../components/AddProject2';
 import AddProject3 from '../components/AddProject3';
 import Loading from '../components/Loading';
-import { setStep, setFeatures, setProjectName, setCompanyDetail } from '../features/project/projectSlice';
+import { setStep, setFeatures, setProjectName, setCompanyDetail, saveProjectData } from '../features/project/projectSlice';
 
 const CreateProject = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { step, projectName, features, companyDetail } = useSelector((state) => state.project);
 
   const handleCheckboxChange = (label, value) => {
@@ -21,6 +23,7 @@ const CreateProject = () => {
       features,
       companyDetail,
     };
+    saveProjectData(data);
     dispatch(setStep(4)); // Assuming 4 is the loading step
   };
 
@@ -35,7 +38,9 @@ const CreateProject = () => {
             <div className="flex items-center mb-6">
               <div
                 className="flex-none w-16 h-16 bg-purple-100 rounded-full flex justify-center items-center mr-4 cursor-pointer hover:bg-purple-200 transition"
-                onClick={() => dispatch(setStep(step - 1))}
+                onClick={() => {dispatch(setStep(step - 1))
+                  // if(step === 1) return navigate('/home')
+                }}
               >
                 <ArrowBackIcon className="text-purple-500" style={{ fontSize: 32 }} />
               </div>
@@ -61,18 +66,6 @@ const CreateProject = () => {
             {step === 3 && (
               <AddProject3
                 handleSave={handleSave}
-                email={companyDetail.email}
-                setEmail={(newEmail) =>
-                  dispatch(setCompanyDetail({ ...companyDetail, email: newEmail }))
-                }
-                companyName={companyDetail.companyName}
-                setCompanyName={(newCompanyName) =>
-                  dispatch(setCompanyDetail({ ...companyDetail, companyName: newCompanyName }))
-                }
-                phone={companyDetail.phone}
-                setPhone={(newPhone) =>
-                  dispatch(setCompanyDetail({ ...companyDetail, phone: newPhone }))
-                }
               />
             )}
           </Paper>

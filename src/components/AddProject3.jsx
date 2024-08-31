@@ -1,12 +1,16 @@
 import { Button, TextField } from "@mui/material";
 import PropTypes from 'prop-types';
 import PhoneInput from './PhoneInput';
+import {useSelector, useDispatch} from 'react-redux';
+import { setCompanyDetail } from "../features/project/projectSlice";
 
-export default function AddProject3({ handleSave, email, setEmail, companyName, setCompanyName, phone, setPhone }) {
+export default function AddProject3(
+  {handleSave}
+){
+    const dispatch = useDispatch();
+    const companyDetail = useSelector((state) => state.project.companyDetail);
+    
 
-  const onChangePhone = (e) => {
-    setPhone(e.target.value);
-  }
 
   // todo: handling all email, phone number and company name (company details states) in this component instead of passing them through the props 
 
@@ -32,11 +36,11 @@ export default function AddProject3({ handleSave, email, setEmail, companyName, 
                 fullWidth
                 variant="standard"
                 label="Email"
-                value={email}
+                value={companyDetail.email}
                 InputLabelProps={{ className: "text-gray-600" }}
                 InputProps={{ className: "text-gray-800" }}
                 className="mb-8"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => dispatch(setCompanyDetail({...companyDetail, email: e.target.value}))}
               />
             </div>
             <div className="ml-5">
@@ -44,16 +48,16 @@ export default function AddProject3({ handleSave, email, setEmail, companyName, 
                 fullWidth
                 variant="standard"
                 label="Company Name"
-                value={companyName}
+                value={companyDetail.companyName}
                 InputLabelProps={{ className: "text-gray-600" }}
                 InputProps={{ className: "text-gray-800" }}
                 className="mb-8"
-                onChange={(e) => setCompanyName(e.target.value)}
+                onChange={(e) => dispatch(setCompanyDetail({...companyDetail, companyName : e.target.value}))}
               />
             </div>
           </div>
           <div className="mt-3">
-            <PhoneInput value={phone} onChangePhone={onChangePhone}/>
+            <PhoneInput value={companyDetail.phone} onChangePhone={(e)=> dispatch(setCompanyDetail({...companyDetail, phone: e.target.value}))}/>
           </div>
         </div>
       </div>
@@ -76,12 +80,12 @@ export default function AddProject3({ handleSave, email, setEmail, companyName, 
   );
 }
 
-AddProject3.propTypes = {
-  handleSave: PropTypes.func.isRequired,
-  email: PropTypes.string.isRequired,
-  setEmail: PropTypes.func.isRequired,
-  companyName: PropTypes.string.isRequired,
-  setCompanyName: PropTypes.func.isRequired,
-  phone: PropTypes.string.isRequired,
-  setPhone: PropTypes.func.isRequired,
-};
+// AddProject3.propTypes = {
+//   handleSave: PropTypes.func.isRequired,
+//   email: PropTypes.string.isRequired,
+//   setEmail: PropTypes.func.isRequired,
+//   companyName: PropTypes.string.isRequired,
+//   setCompanyName: PropTypes.func.isRequired,
+//   phone: PropTypes.string.isRequired,
+//   setPhone: PropTypes.func.isRequired,
+// };
