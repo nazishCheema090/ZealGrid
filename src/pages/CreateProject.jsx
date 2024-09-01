@@ -6,7 +6,7 @@ import AddProject1 from '../components/AddProject1';
 import AddProject2 from '../components/AddProject2';
 import AddProject3 from '../components/AddProject3';
 import Loading from '../components/Loading';
-import { setStep, setFeatures, setProjectName, setCompanyDetail, saveProjectData } from '../features/project/projectSlice';
+import { setStep, setFeatures, setProjectName, saveProjectData } from '../features/project/projectSlice';
 
 const CreateProject = () => {
   const dispatch = useDispatch();
@@ -23,9 +23,17 @@ const CreateProject = () => {
       features,
       companyDetail,
     };
-    saveProjectData(data);
-    dispatch(setStep(4)); // Assuming 4 is the loading step
-  };
+    // Dispatch the saveProjectData thunk to save the project data
+    dispatch(saveProjectData(data)).then((result) => {
+      if (result.type === 'project/saveProjectData/fulfilled') {        
+        dispatch(setStep(4)); // Assuming 4 is the loading step or the next step after saving
+      } else if (result.type === 'project/saveProjectData/rejected') {
+        // Handle error if needed, show error message, etc.
+        console.error('Error saving project data:', result.payload);
+        // Optionally navigate to an error page or show a message
+      }
+      }
+    )};
 
   return (
     <>

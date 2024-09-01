@@ -3,9 +3,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import ZealGrid from '../assets/ZealGrid.svg';
 import './Loading.css';
 import PropTypes from 'prop-types'; // Import prop-types
+import {useNavigate} from 'react-router-dom'
 
 const Loading = ({projectName}) => {
   const [isProjectCreated, setIsProjectCreated] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -13,6 +15,10 @@ const Loading = ({projectName}) => {
     }, 5000); // Simulate project creation time
     return () => clearTimeout(timer);
   }, []);
+
+  const handleClick = ()=>{
+    navigate('/home')
+  }
 
   return (
     <div className="flex items-center justify-center h-screen bg-white font-poppins relative">
@@ -36,7 +42,9 @@ const Loading = ({projectName}) => {
           <p className="mt-4 text-lg">
             Your project <span className="font-bold">{projectName}</span> is created.
           </p>
-          <button className="mt-10 bg-blue-500 text-white py-2 px-6 rounded-full hover:bg-blue-700">
+          <button className="mt-10 bg-blue-500 text-white py-2 px-6 rounded-full hover:bg-blue-700"
+            onClick={handleClick}
+          >
             Continue
           </button>
         </div>
