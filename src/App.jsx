@@ -7,7 +7,6 @@ import CreateProject from './pages/CreateProject';
 import {useDispatch} from 'react-redux';
 import { useEffect } from 'react';
 import {observeAuthState} from './features/auth/authSlice';
-import { ProjectProvider } from './context/ProjectContext';
 
 
 const App = () => {
@@ -20,7 +19,6 @@ const App = () => {
   },[dispatch]);
   return (
       <Router>
-        {/* <ProjectProvider> */}
           <Routes>
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/" element={<PrivateRoute />}>
@@ -29,7 +27,6 @@ const App = () => {
               <Route path="/add-project" element={<CreateProject />} />
             </Route>
           </Routes>
-        {/* </ProjectProvider> */}
       </Router>
   );
 };
