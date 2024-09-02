@@ -4,10 +4,13 @@ import ZealGrid from '../assets/ZealGrid.svg';
 import './Loading.css';
 import PropTypes from 'prop-types'; // Import prop-types
 import {useNavigate} from 'react-router-dom'
+import {useDispatch} from 'react-redux';
+import { setStep } from '../features/project/projectSlice';
 
 const Loading = ({projectName}) => {
   const [isProjectCreated, setIsProjectCreated] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -17,7 +20,9 @@ const Loading = ({projectName}) => {
   }, []);
 
   const handleClick = ()=>{
-    navigate('/home')
+    navigate('/home');
+    dispatch(setStep(1));
+
   }
 
   return (

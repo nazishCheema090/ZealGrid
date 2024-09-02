@@ -30,10 +30,17 @@ const CreateProject = () => {
       } else if (result.type === 'project/saveProjectData/rejected') {
         // Handle error if needed, show error message, etc.
         console.error('Error saving project data:', result.payload);
-        // Optionally navigate to an error page or show a message
       }
       }
     )};
+
+    const handleClick = () =>{
+      if(step !== 1){
+        dispatch(setStep(step-1));
+      }else {
+        navigate('/home')
+      }
+    }
 
   return (
     <>
@@ -46,9 +53,7 @@ const CreateProject = () => {
             <div className="flex items-center mb-6">
               <div
                 className="flex-none w-16 h-16 bg-purple-100 rounded-full flex justify-center items-center mr-4 cursor-pointer hover:bg-purple-200 transition"
-                onClick={() => {dispatch(setStep(step - 1))
-                  // if(step === 1) return navigate('/home')
-                }}
+                onClick={handleClick}
               >
                 <ArrowBackIcon className="text-purple-500" style={{ fontSize: 32 }} />
               </div>

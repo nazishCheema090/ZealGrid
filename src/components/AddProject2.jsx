@@ -31,7 +31,7 @@ const Step2 = ({projectName, onCheckBoxChange,features}) => {
     const { name, checked } = event.target;
     setToogles(checked);
     onCheckBoxChange(name, checked);
-    dispatch(setFeatures({...features, toogles : checked}));
+    dispatch(setFeatures({...features, toggles : checked}));
   };
 
 
