@@ -5,7 +5,6 @@ import { Paper } from '@mui/material';
 import AddProject1 from '../components/AddProject1';
 import AddProject2 from '../components/AddProject2';
 import AddProject3 from '../components/AddProject3';
-import Loading from '../components/Loading';
 import { setStep, setFeatures, setProjectName, saveProjectData } from '../features/project/projectSlice';
 import {toast} from 'react-hot-toast'
 
