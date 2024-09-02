@@ -3,16 +3,17 @@ import PropTypes from 'prop-types';
 import PhoneInput from './PhoneInput';
 import {useSelector, useDispatch} from 'react-redux';
 import { setCompanyDetail } from "../features/project/projectSlice";
+import CircularProgress from '@mui/material/CircularProgress'
 
 export default function AddProject3(
   {handleSave}
 ){
     const dispatch = useDispatch();
+    const loading = useSelector((state)=> state.project.loading);
     const companyDetail = useSelector((state) => state.project.companyDetail);
     
 
 
-  // todo: handling all email, phone number and company name (company details states) in this component instead of passing them through the props 
 
   return (
     <div>
@@ -73,19 +74,13 @@ export default function AddProject3(
           }}
           onClick={handleSave}
         >
-          Continue
+          {loading ? <CircularProgress size={30} style={{color : 'white'}} /> : 'Continue' }
         </Button>
       </div>
     </div>
   );
 }
 
-// AddProject3.propTypes = {
-//   handleSave: PropTypes.func.isRequired,
-//   email: PropTypes.string.isRequired,
-//   setEmail: PropTypes.func.isRequired,
-//   companyName: PropTypes.string.isRequired,
-//   setCompanyName: PropTypes.func.isRequired,
-//   phone: PropTypes.string.isRequired,
-//   setPhone: PropTypes.func.isRequired,
-// };
+AddProject3.propTypes = {
+  handleSave: PropTypes.func.isRequired,
+};

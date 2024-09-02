@@ -7,6 +7,7 @@ import AddProject2 from '../components/AddProject2';
 import AddProject3 from '../components/AddProject3';
 import Loading from '../components/Loading';
 import { setStep, setFeatures, setProjectName, saveProjectData } from '../features/project/projectSlice';
+import {toast} from 'react-hot-toast'
 
 const CreateProject = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const CreateProject = () => {
   };
 
   const handleSave = () => {
+
     const data = {
       projectName,
       features,
@@ -26,13 +28,17 @@ const CreateProject = () => {
     // Dispatch the saveProjectData thunk to save the project data
     dispatch(saveProjectData(data)).then((result) => {
       if (result.type === 'project/saveProjectData/fulfilled') {        
-        dispatch(setStep(4)); // Assuming 4 is the loading step or the next step after saving
+        toast.success("Project Created successfully")
+        navigate('/home');
+        console.log('projec created');
       } else if (result.type === 'project/saveProjectData/rejected') {
-        // Handle error if needed, show error message, etc.
+        toast.error('Could not create project')
+        navigate('/home');
         console.error('Error saving project data:', result.payload);
       }
-      }
-    )};
+      })
+      dispatch(setStep(1));
+  };
 
     const handleClick = () =>{
       if(step !== 1){
@@ -44,9 +50,7 @@ const CreateProject = () => {
 
   return (
     <>
-      {step === 4 ? (
-        <Loading projectName={projectName} />
-      ) : (
+      
         <div className="flex justify-center items-center h-screen bg-gray-100 font-poppins">
           <Paper className="relative w-full max-w-3xl p-12 rounded-lg shadow-xl transform transition-all duration-500 hover:shadow-2xl">
             {/* Header Row */}
@@ -83,7 +87,7 @@ const CreateProject = () => {
             )}
           </Paper>
         </div>
-      )}
+      
     </>
   );
 };
