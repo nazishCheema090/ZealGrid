@@ -1,38 +1,60 @@
-import  { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Import AuthContext
-
 import TT from "../assets/TT.svg";
 import ZealGrid from "../assets/ZealGrid.svg";
 import RadioButton from "../assets/RadioButton.svg";
-import Eye from "../assets/Eye.svg"; // Importing the Eye icon
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
+import {useDispatch, useSelector } from 'react-redux';
+import { signIn,resetPassword } from '../features/auth/authSlice';
+
+
+
 
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const { signIn } = useAuth();
-  const navigate = useNavigate(); // Use navigate for redirection
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
+  const [open, setOpen] = useState(false); 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
+  const {currentUser, error, loading} = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/getStarted');
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
 
     try {
-      await signIn(email, password);
-      console.log('Sign in successful');
-      navigate('/getStarted'); // Redirect to the protected route (e.g., home) after successful sign-in
+      await dispatch(signIn({email,password})).unwrap()
+      navigate('/getStarted'); 
+    } catch (err) {
+      console.log(err);
+      alert('Failed to sign-In');
+      
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    try {
+      await dispatch(resetPassword(forgotPasswordEmail)).unwrap();
+      setForgotPasswordEmail('');
+      setOpen(false);
+      alert('Password reset email sent');
     } catch (error) {
-      setError('Failed to sign in');
-      console.error('Error signing in:', error);
+      setError('Failed to reset password');
     }
   };
 
   return (
     <div className="flex min-h-screen" style={{ backgroundColor: '#F9F9F9' }}>
       <div className="flex w-full max-w-screen-lg mx-auto p-8 relative">
-        {/* Sign-In Form */}
         <div className="w-1/2 bg-white p-10 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold text-center mt-8 mb-8">Sign in <br /> to ZealGrid</h2>
           <form onSubmit={handleSubmit}>
@@ -69,18 +91,21 @@ const SignInPage = () => {
               >
                 Password
               </label>
-              <img
-                src={Eye}
-                alt="Show/Hide Password"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 cursor-pointer"
-                width="24"
-                height="24"
-              />
+              {showPassword ? (
+                <VisibilityOff
+                  className="absolute right-3 top-3 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              ) : (
+                <Visibility
+                  className="absolute right-3 top-3 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              )}
             </div>
             {error && <p className="text-red-500 text-center">{error}</p>}
             <div className="text-right mb-6">
-              <a href="#" className="text-indigo-600 hover:underline">Forgot Password?</a>
+              <button type="button" className="text-indigo-600 hover:underline" onClick={() => setOpen(true)}>Forgot Password?</button>
             </div>
             <div className="mt-8 mb-6 text-center">
               <button
@@ -93,7 +118,6 @@ const SignInPage = () => {
           </form>
         </div>
         
-        {/* Right Side with SVGs */}
         <div className="w-1/2 relative flex items-center justify-center">
           <div className="absolute" style={{ top: '20px', left: '70%', transform: 'rotate(-10.45deg)' }}>
             <img src={TT} alt="TT SVG" style={{ width: '162.87px', height: '112.46px' }} />
@@ -106,6 +130,29 @@ const SignInPage = () => {
           </div>
         </div>
       </div>
+
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Reset Password</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Email Address"
+            type="email"
+            fullWidth
+            value={forgotPasswordEmail}
+            onChange={(e) => setForgotPasswordEmail(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleForgotPassword} color="primary">
+            Reset Password
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
