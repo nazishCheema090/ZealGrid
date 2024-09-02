@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TT from "../assets/TT.svg";
-import ZealGrid from "../assets/ZealGrid.svg";
-import RadioButton from "../assets/RadioButton.svg";
+import TT from "../../assets/TT.svg";
+import ZealGrid from "../../assets/ZealGrid.svg";
+import RadioButton from "../../assets/RadioButton.svg";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
 import {useDispatch, useSelector } from 'react-redux';
-import { signIn,resetPassword } from '../features/auth/authSlice';
+import { signIn,resetPassword } from '../../redux/slice/authSlice';
 
 
 

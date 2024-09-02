@@ -1,15 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignInPage from './pages/SignInPage';
-import GetStartedPage from './pages/GetStarted';
-import Home from './pages/Home';
-import PrivateRoute from './components/PrivateRoute';
-import CreateProject from './pages/CreateProject';
+import SignInPage from './pages/sign-in/page';
+import GetStartedPage from './pages/get-started/page';
+import Home from './pages/home/page';
+import PrivateRoute from './protected-routes/private-route/page';
+import CreateProject from './pages/create-project/page';
 import {useDispatch} from 'react-redux';
 import { useEffect } from 'react';
-import {observeAuthState} from './features/auth/authSlice';
+import {observeAuthState} from './redux/slice/authSlice';
 
 
 const App = () => {
+
+  //todo: wrap the provider for redux in the app instead of main, after implementing react query
 
   const dispatch = useDispatch();
 

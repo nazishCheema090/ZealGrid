@@ -1,7 +1,5 @@
-// src/components/Header.js
 
 import { useState } from 'react';
-import PropTypes from 'prop-types'; // Import prop-types
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -60,14 +58,6 @@ const Header = ({ currentUser, signOut }) => {
   );
 };
 
-// Add prop type validations
-Header.propTypes = {
-  currentUser: PropTypes.shape({
-    displayName: PropTypes.string,
-    photoURL: PropTypes.string,
-    email: PropTypes.string.isRequired,
-  }).isRequired,
-  signOut: PropTypes.func.isRequired,
-};
+
 
 export default Header;

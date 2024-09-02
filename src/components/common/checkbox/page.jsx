@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useId } from 'react';
 
 export default function CheckBox({ label, value, onChange, name }) {
@@ -21,9 +20,4 @@ export default function CheckBox({ label, value, onChange, name }) {
   );
 }
 
-CheckBox.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired
-};
+

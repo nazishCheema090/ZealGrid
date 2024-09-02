@@ -1,6 +1,4 @@
-// src/components/UserDetails.js
 
-import PropTypes from 'prop-types'; // Import prop-types
 
 const UserDetails = ({ currentUser }) => {
   return (
@@ -11,12 +9,6 @@ const UserDetails = ({ currentUser }) => {
   );
 };
 
-// Add prop type validations
-UserDetails.propTypes = {
-  currentUser: PropTypes.shape({
-    displayName: PropTypes.string,
-    email: PropTypes.string.isRequired,
-  }).isRequired,
-};
+
 
 export default UserDetails;

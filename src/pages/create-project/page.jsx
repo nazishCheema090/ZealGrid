@@ -2,10 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Paper } from '@mui/material';
-import AddProject1 from '../components/AddProject1';
-import AddProject2 from '../components/AddProject2';
-import AddProject3 from '../components/AddProject3';
-import { setStep, setFeatures, setProjectName, saveProjectData } from '../features/project/projectSlice';
+import {AddName, AddLabels, AddInfo} from '../../components/add-project/page'
+import { setStep, setFeatures, setProjectName, saveProjectData } from '../../redux/slice/projectSlice';
 import {toast} from 'react-hot-toast'
 
 const CreateProject = () => {
@@ -36,7 +34,6 @@ const CreateProject = () => {
         console.error('Error saving project data:', result.payload);
       }
       })
-      dispatch(setStep(1));
   };
 
     const handleClick = () =>{
@@ -65,14 +62,14 @@ const CreateProject = () => {
 
             {/* Conditional Rendering of Steps */}
             {step === 1 && (
-              <AddProject1
+              <AddName
                 nextStep={() => dispatch(setStep(step + 1))}
                 projectName={projectName}
                 setProjectName={(name) => dispatch(setProjectName(name))}
               />
             )}
             {step === 2 && (
-              <AddProject2
+              <AddLabels
                 nextStep={() => dispatch(setStep(step + 1))}
                 projectName={projectName}
                 onCheckBoxChange={handleCheckboxChange}
@@ -80,7 +77,7 @@ const CreateProject = () => {
               />
             )}
             {step === 3 && (
-              <AddProject3
+              <AddInfo
                 handleSave={handleSave}
               />
             )}

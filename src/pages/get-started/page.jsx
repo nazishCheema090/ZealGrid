@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import ZealGridLogo from '../assets/ZealGrid.svg';
+import ZealGridLogo from '../../assets/ZealGrid.svg';
 
 const GetStartedPage = () => {
   const navigate = useNavigate();
