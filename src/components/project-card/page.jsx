@@ -12,8 +12,10 @@ const ProjectCard = ({ project }) => {
   return (
     <Link
       to={project.isAddProject ? "/add-project" : "#"}
-      className="flex flex-col items-center justify-center rounded-lg shadow-lg p-4 transition-transform transform hover:scale-105 hover:shadow-xl"
-      style={{ ...gradientStyle, width: '100%', height: '200px', textDecoration: 'none' }}
+      className="flex flex-col items-center justify-center rounded-lg 
+      w-full h-[200px] no-underline shadow-lg p-4 transition-transform
+      transform hover:scale-105 hover:shadow-xl  "
+      style={{ ...gradientStyle }}
     >
       {project.isAddProject ? (
         <div className="flex flex-col items-center justify-center">

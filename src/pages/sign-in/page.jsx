@@ -55,7 +55,7 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen" style={{ backgroundColor: "#F9F9F9" }}>
+    <div className="flex min-h-screen bg-[#F9F9F9]">
       <div className="flex w-full max-w-screen-lg mx-auto p-8 relative">
         <div className="w-1/2 bg-white p-10 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold text-center mt-8 mb-8">

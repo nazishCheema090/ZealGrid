@@ -35,10 +35,7 @@ const AddName = ({ nextStep, setProjectName, projectName }) => {
         <div className="mb-6">
           <p className="text-xl text-gray-600 mb-3">Step 1 of 3</p>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-            <div
-              className="bg-purple-500 h-2 rounded-full"
-              style={{ width: "33%" }}
-            ></div>
+            <div className="bg-purple-500 h-2 rounded-full w-[33%] "></div>
           </div>
         </div>
         <div className="mb-6">
@@ -115,10 +112,7 @@ const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
         <div className="mb-6">
           <p className="text-xl text-gray-600 mb-3">Step 2 of 3</p>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-            <div
-              className="bg-purple-500 h-2 rounded-full"
-              style={{ width: "66%" }}
-            ></div>
+            <div className="bg-purple-500 h-2 rounded-full w-[66%]"></div>
           </div>
         </div>
         <div className="mb-6">
