@@ -1,10 +1,5 @@
 import React, { Children } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
+import { Dialog } from "@mui/material";
 
 const DialogWrapper = ({ children, open, onClose }) => {
   return (
