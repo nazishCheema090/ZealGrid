@@ -26,11 +26,11 @@ const CreateProject = () => {
     dispatch(saveProjectData(data)).then((result) => {
       if (result.type === 'project/saveProjectData/fulfilled') {        
         toast.success("Project Created successfully")
-        navigate('/home');
+        navigate('/');
         console.log('projec created');
       } else if (result.type === 'project/saveProjectData/rejected') {
         toast.error('Could not create project')
-        navigate('/home');
+        navigate('/');
         console.error('Error saving project data:', result.payload);
       }
       })
@@ -40,7 +40,7 @@ const CreateProject = () => {
       if(step !== 1){
         dispatch(setStep(step-1));
       }else {
-        navigate('/home')
+        navigate('/')
       }
     }
 

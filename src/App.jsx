@@ -1,12 +1,8 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignInPage from './pages/sign-in/page';
-import GetStartedPage from './pages/get-started/page';
-import Home from './pages/home/page';
-import PrivateRoute from './protected-routes/private-route/page';
-import CreateProject from './pages/create-project/page';
+import { BrowserRouter as Router, Routes, Route, RouterProvider } from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import { useEffect } from 'react';
 import {observeAuthState} from './redux/slice/authSlice';
+import router from './routes/routes.jsx';
 
 
 const App = () => {
@@ -20,16 +16,7 @@ const App = () => {
 
   },[dispatch]);
   return (
-      <Router>
-          <Routes>
-            <Route path="/signin" element={<SignInPage />} />
-            <Route path="/" element={<PrivateRoute />}>
-              <Route path="/getStarted" element={<GetStartedPage />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/add-project" element={<CreateProject />} />
-            </Route>
-          </Routes>
-      </Router>
+      <RouterProvider router={router} />
   );
 };
 

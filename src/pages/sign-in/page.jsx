@@ -24,7 +24,7 @@ const SignInPage = () => {
 
   useEffect(() => {
     if (currentUser) {
-      navigate('/getStarted');
+      navigate('/');
     }
   }, []);
 
@@ -33,7 +33,7 @@ const SignInPage = () => {
 
     try {
       await dispatch(signIn({email,password})).unwrap()
-      navigate('/getStarted'); 
+      navigate('/'); 
     } catch (err) {
       console.log(err);
       alert('Failed to sign-In');
