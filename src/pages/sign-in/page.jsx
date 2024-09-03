@@ -13,17 +13,37 @@ import DialogWrapper from "../../components/common/DialogWrapper";
 import DialogActionsWrapper from "../../components/common/DialogActionsWrapper";
 import DialogTitleWrapper from "../../components/common/DialogTitleWrapper";
 import DialogContentWrapper from "../../components/common/DialogContentWrapper";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
+
+const signInSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be atleast 6 charachters long" }),
+});
 
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { currentUser, error, loading } = useSelector((state) => state.auth);
+  const { currentUser } = useSelector((state) => state.auth);
+
+  const {
+    handleSubmit,
+    control,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(signInSchema),
+  });
 
   useEffect(() => {
     if (currentUser) {
@@ -31,15 +51,13 @@ const SignInPage = () => {
     }
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data) => {
     try {
-      await dispatch(signIn({ email, password })).unwrap();
+      await dispatch(signIn(data)).unwrap();
       navigate("/");
-    } catch (err) {
-      console.log(err);
-      alert("Failed to sign-In");
+    } catch (error) {
+      console.log(error);
+      setError("email", { type: "manual", message: "Failed to sign in" });
     }
   };
 
@@ -61,29 +79,47 @@ const SignInPage = () => {
           <h2 className="text-3xl font-bold text-center mt-8 mb-8">
             Sign in <br /> to ZealGrid
           </h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="relative mt-10 mb-10">
-              <Input
-                type="email"
-                id="email"
-                label="Email"
-                variant="standard"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                fullWidth={true}
-                required
+              <Controller
+                name="email"
+                control={control}
+                defaultValue=""
+                render={({ field: { onChange, onBlur, value, ref } }) => (
+                  <Input
+                    type="email"
+                    label="Email"
+                    variant="standard"
+                    error={!!errors.email}
+                    helperText={errors.email ? errors.email.message : ""}
+                    value={value}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    inputRef={ref}
+                    fullWidth={true}
+                  />
+                )}
               />
             </div>
             <div className="relative mt-10 mb-10">
-              <Input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                label="password"
-                variant="standard"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                fullWidth={true}
+              <Controller
+                name="password"
+                control={control}
+                defaultValue=""
+                render={({ field: { onChange, onBlur, value, ref } }) => (
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    label="Password"
+                    variant="standard"
+                    error={!!errors.password}
+                    helperText={errors.password ? errors.password.message : ""}
+                    value={value}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    inputRef={ref}
+                    fullWidth={true}
+                  />
+                )}
               />
 
               {showPassword ? (
@@ -98,7 +134,6 @@ const SignInPage = () => {
                 />
               )}
             </div>
-            {error && <p className="text-red-500 text-center">{error}</p>}
             <div className="text-right mb-6">
               <button
                 type="button"
@@ -110,11 +145,12 @@ const SignInPage = () => {
             </div>
             <div className="mt-8 mb-6 text-center">
               <CustomButton
+                type="submit"
                 onClick={handleSubmit}
                 variant="contained"
                 color="primary"
               >
-                {loading ? <Loading size={30} color="white" /> : "Sign In"}
+                {isSubmitting ? <Loading size={30} color="white" /> : "Sign In"}
               </CustomButton>
             </div>
           </form>
