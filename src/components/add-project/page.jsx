@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { TextField, Button } from "@mui/material";
-import CheckBox from "../common/checkbox/page";
+import CheckBox from "../common/CheckBox";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setFeatures,
   setStep,
   setCompanyDetail,
 } from "../../redux/slice/projectSlice";
-import PhoneInput from "../common/phone-input/page";
-import CircularProgress from "@mui/material/CircularProgress";
+import PhoneInput from "../common/PhoneInput";
+import Loading from "../common/Loading";
+import Input from "../common/Input";
+import CustomButton from "../common/CustomButton";
 
 const AddName = ({ nextStep, setProjectName, projectName }) => {
   const [fullName, setLocalFullName] = useState("");
@@ -44,14 +45,13 @@ const AddName = ({ nextStep, setProjectName, projectName }) => {
           <p className="text-2xl text-gray-700 font-semibold my-3 leading-tight">{`Let's Start with the name of your Application `}</p>
         </div>
         <div className="mb-12">
-          <TextField
-            fullWidth
+          <Input
+            fullWidth={true}
             variant="standard"
             label="Full Name"
+            type="text"
             value={fullName}
             onChange={(e) => setLocalFullName(e.target.value)}
-            InputLabelProps={{ className: "text-gray-600" }}
-            InputProps={{ className: "text-gray-800" }}
             className="mb-8"
             error={Boolean(error)}
             helperText={error}
@@ -59,19 +59,13 @@ const AddName = ({ nextStep, setProjectName, projectName }) => {
         </div>
       </div>
       <div className="flex justify-center">
-        <Button
+        <CustomButton
           variant="contained"
-          className="text-white text-lg rounded-full py-3 px-8 shadow-md hover:bg-blue-600 focus:outline-none transition"
-          style={{
-            backgroundColor: "#7065F0",
-            width: "150px",
-            height: "50px",
-            borderRadius: "25px",
-          }}
+          color="primary"
           onClick={handleNextClick}
         >
           Next
-        </Button>
+        </CustomButton>
       </div>
     </div>
   );
@@ -121,7 +115,10 @@ const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
         <div className="mb-6">
           <p className="text-xl text-gray-600 mb-3">Step 2 of 3</p>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-            <div className="bg-purple-500 h-2 rounded-full w-[66%] "></div>
+            <div
+              className="bg-purple-500 h-2 rounded-full"
+              style={{ width: "66%" }}
+            ></div>
           </div>
         </div>
         <div className="mb-6">
@@ -166,19 +163,9 @@ const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
         </div>
       </div>
       <div className="flex justify-center">
-        <Button
-          variant="contained"
-          className="text-white text-lg rounded-full py-3 px-8 shadow-md hover:bg-blue-600 focus:outline-none transition"
-          style={{
-            backgroundColor: "#7065F0",
-            width: "150px",
-            height: "50px",
-            borderRadius: "25px",
-          }}
-          onClick={handleClick}
-        >
+        <CustomButton variant="contained" color="primary" onClick={handleClick}>
           Continue
-        </Button>
+        </CustomButton>
       </div>
     </div>
   );
@@ -204,13 +191,12 @@ const AddInfo = ({ handleSave }) => {
         <div className="mb-12">
           <div className="flex">
             <div className="mr-5">
-              <TextField
-                fullWidth
+              <Input
+                fullWidth={true}
+                type="email"
                 variant="standard"
                 label="Email"
                 value={companyDetail.email}
-                InputLabelProps={{ className: "text-gray-600" }}
-                InputProps={{ className: "text-gray-800" }}
                 className="mb-8"
                 onChange={(e) =>
                   dispatch(
@@ -223,13 +209,12 @@ const AddInfo = ({ handleSave }) => {
               />
             </div>
             <div className="ml-5">
-              <TextField
-                fullWidth
+              <Input
+                fullWidth={true}
+                type="text"
                 variant="standard"
                 label="Company Name"
                 value={companyDetail.companyName}
-                InputLabelProps={{ className: "text-gray-600" }}
-                InputProps={{ className: "text-gray-800" }}
                 className="mb-8"
                 onChange={(e) =>
                   dispatch(
@@ -255,23 +240,13 @@ const AddInfo = ({ handleSave }) => {
         </div>
       </div>
       <div className="flex justify-center">
-        <Button
-          variant="contained"
-          className="text-white text-lg   py-3 px-8 shadow-md hover:bg-blue-800 focus:outline-none transition"
-          style={{
-            backgroundColor: "#7065F0",
-            width: "150px",
-            height: "50px",
-            borderRadius: "25px",
-          }}
-          onClick={handleSave}
-        >
+        <CustomButton variant="contained" color="primary" onClick={handleSave}>
           {loading ? (
-            <CircularProgress size={30} style={{ color: "white" }} />
+            <Loading size={30} color="white" thickness={5} />
           ) : (
             "Continue"
           )}
-        </Button>
+        </CustomButton>
       </div>
     </div>
   );
