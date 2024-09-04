@@ -6,7 +6,7 @@ import { setFeatures, setStep ,setCompanyDetail} from '../../redux/slice/project
 import PhoneInput from '../common/phone-input/page';
 import CircularProgress from '@mui/material/CircularProgress'
 
-const AddName = ({ nextStep, setProjectName,projectName}) => {
+const AddName = ({nextStep,setProjectName,projectName}) => {
 
   
 
@@ -26,7 +26,7 @@ const AddName = ({ nextStep, setProjectName,projectName}) => {
   
     useEffect(()=>{
       setLocalFullName(projectName || '')
-    },[projectName])
+    },[projectName]) 
   
   
   
