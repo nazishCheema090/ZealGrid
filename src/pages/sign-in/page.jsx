@@ -13,6 +13,19 @@ import DialogWrapper from "../../components/common/DialogWrapper";
 import DialogActionsWrapper from "../../components/common/DialogActionsWrapper";
 import DialogTitleWrapper from "../../components/common/DialogTitleWrapper";
 import DialogContentWrapper from "../../components/common/DialogContentWrapper";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
+
+const signInSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be atleast 6 charachters long" }),
+});
 
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -40,11 +53,11 @@ const SignInPage = () => {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(signIn({ email, password })).unwrap();
+      await dispatch(signIn(data)).unwrap();
       navigate("/");
-    } catch (err) {
-      console.log(err);
-      alert("Failed to sign-In");
+    } catch (error) {
+      console.log(error);
+      setError("email", { type: "manual", message: "Failed to sign in" });
     }
   };
 
