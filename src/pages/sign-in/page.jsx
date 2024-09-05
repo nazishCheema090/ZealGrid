@@ -31,6 +31,7 @@ const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [open, setOpen] = useState(false);
+  const [resetPasswordError, setResetPasswordError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -68,7 +69,7 @@ const SignInPage = () => {
       setOpen(false);
       alert("Password reset email sent");
     } catch (error) {
-      setError("Failed to reset password");
+      setResetPasswordError("Could not reset password");
     }
   };
 
@@ -173,7 +174,14 @@ const SignInPage = () => {
         </div>
       </div>
 
-      <DialogWrapper open={open} onClose={() => setOpen(false)}>
+      <DialogWrapper
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setForgotPasswordEmail("");
+          setResetPasswordError("");
+        }}
+      >
         <DialogTitleWrapper>Reset Password</DialogTitleWrapper>
         <DialogContentWrapper>
           <Input
@@ -185,10 +193,19 @@ const SignInPage = () => {
             value={forgotPasswordEmail}
             onChange={(e) => setForgotPasswordEmail(e.target.value)}
           />
+          {resetPasswordError && (
+            <div className="text-red-500 text-center mb-4">
+              {resetPasswordError}
+            </div>
+          )}
         </DialogContentWrapper>
         <DialogActionsWrapper>
           <CustomButton
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              setOpen(false);
+              setForgotPasswordEmail("");
+              setResetPasswordError("");
+            }}
             variant="text"
             color="primary"
           >
