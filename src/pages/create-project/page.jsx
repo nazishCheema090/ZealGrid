@@ -7,39 +7,16 @@ import {
   setStep,
   setFeatures,
   setProjectName,
-  saveProjectData,
 } from "../../redux/slice/projectSlice";
 import { toast } from "react-hot-toast";
 
 const CreateProject = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { step, projectName, features, companyDetail } = useSelector(
-    (state) => state.project
-  );
+  const { step, projectName, features } = useSelector((state) => state.project);
 
   const handleCheckboxChange = (label, value) => {
     dispatch(setFeatures({ ...features, [label]: value }));
-  };
-
-  const handleSave = async () => {
-    const data = {
-      projectName,
-      features,
-      companyDetail,
-    };
-    // Dispatch the saveProjectData thunk to save the project data
-    await dispatch(saveProjectData(data)).then((result) => {
-      if (result.type === "project/saveProjectData/fulfilled") {
-        toast.success("Project Created successfully");
-        navigate("/");
-        console.log("projec created");
-      } else if (result.type === "project/saveProjectData/rejected") {
-        toast.error("Could not create project");
-        navigate("/");
-        console.error("Error saving project data:", result.payload);
-      }
-    });
   };
 
   const handleClick = () => {
@@ -86,7 +63,7 @@ const CreateProject = () => {
               features={features}
             />
           )}
-          {step === 3 && <AddInfo handleSave={handleSave} />}
+          {step === 3 && <AddInfo />}
         </Paper>
       </div>
     </>

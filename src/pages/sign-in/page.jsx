@@ -30,8 +30,8 @@ const signInSchema = z.object({
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
-  const [open, setOpen] = useState(false);
   const [resetPasswordError, setResetPasswordError] = useState("");
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

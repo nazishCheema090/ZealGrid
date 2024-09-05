@@ -5,6 +5,7 @@ import {
   setFeatures,
   setStep,
   setCompanyDetail,
+  saveProjectData,
 } from "../../redux/slice/projectSlice";
 import Loading from "../common/Loading";
 import Input from "../common/Input";
@@ -13,6 +14,8 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import PhoneNumberInput from "../common/PhoneNumberInput";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const nameSchema = z.object({
   fullName: z.string().min(1, "Fullname is required"),
@@ -248,9 +251,12 @@ const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
   );
 };
 
-const AddInfo = ({ handleSave }) => {
+const AddInfo = () => {
   const dispatch = useDispatch();
-  const companyDetail = useSelector((state) => state.project.companyDetail);
+  const navigate = useNavigate();
+  const { companyDetail, projectName, features } = useSelector(
+    (state) => state.project
+  );
 
   const {
     control,
@@ -265,8 +271,23 @@ const AddInfo = ({ handleSave }) => {
     },
   });
 
-  const onSubmit = async (data) => {
-    await handleSave(data);
+  const onSubmit = async () => {
+    const data = {
+      projectName,
+      features,
+      companyDetail,
+    };
+    await dispatch(saveProjectData(data)).then((result) => {
+      if (result.type === "project/saveProjectData/fulfilled") {
+        toast.success("Project Created successfully");
+        navigate("/");
+        console.log("projec created");
+      } else if (result.type === "project/saveProjectData/rejected") {
+        toast.error("Could not create project");
+        navigate("/");
+        console.error("Error saving project data:", result.payload);
+      }
+    });
   };
 
   return (
