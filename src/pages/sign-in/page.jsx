@@ -4,27 +4,46 @@ import TT from "../../assets/TT.svg";
 import ZealGrid from "../../assets/ZealGrid.svg";
 import RadioButton from "../../assets/RadioButton.svg";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { signIn, resetPassword } from "../../redux/slice/authSlice";
+import Input from "../../components/common/Input";
+import CustomButton from "../../components/common/CustomButton";
+import Loading from "../../components/common/Loading";
+import DialogWrapper from "../../components/common/DialogWrapper";
+import DialogActionsWrapper from "../../components/common/DialogActionsWrapper";
+import DialogTitleWrapper from "../../components/common/DialogTitleWrapper";
+import DialogContentWrapper from "../../components/common/DialogContentWrapper";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
+
+const signInSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be atleast 6 charachters long" }),
+});
 
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { currentUser, error, loading } = useSelector((state) => state.auth);
+  const { currentUser } = useSelector((state) => state.auth);
+
+  const {
+    handleSubmit,
+    control,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(signInSchema),
+  });
 
   useEffect(() => {
     if (currentUser) {
@@ -32,15 +51,13 @@ const SignInPage = () => {
     }
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data) => {
     try {
-      await dispatch(signIn({ email, password })).unwrap();
+      await dispatch(signIn(data)).unwrap();
       navigate("/");
-    } catch (err) {
-      console.log(err);
-      alert("Failed to sign-In");
+    } catch (error) {
+      console.log(error);
+      setError("email", { type: "manual", message: "Failed to sign in" });
     }
   };
 
@@ -56,46 +73,55 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen" style={{ backgroundColor: "#F9F9F9" }}>
+    <div className="flex min-h-screen bg-[#F9F9F9]">
       <div className="flex w-full max-w-screen-lg mx-auto p-8 relative">
         <div className="w-1/2 bg-white p-10 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold text-center mt-8 mb-8">
             Sign in <br /> to ZealGrid
           </h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="relative mt-10 mb-10">
-              <input
-                type="email"
-                id="email"
-                className="peer w-full px-4 py-2 border-b-2 border-gray-300 placeholder-transparent focus:outline-none focus:border-indigo-600"
-                placeholder="Email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+              <Controller
+                name="email"
+                control={control}
+                defaultValue=""
+                render={({ field: { onChange, onBlur, value, ref } }) => (
+                  <Input
+                    type="email"
+                    label="Email"
+                    variant="standard"
+                    error={!!errors.email}
+                    helperText={errors.email ? errors.email.message : ""}
+                    value={value}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    inputRef={ref}
+                    fullWidth={true}
+                  />
+                )}
               />
-              <label
-                htmlFor="email"
-                className="absolute left-4 -top-4 text-gray-600 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-gray-400 peer-focus:-top-4 peer-focus:text-gray-600"
-              >
-                Email
-              </label>
             </div>
             <div className="relative mt-10 mb-10">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                className="peer w-full px-4 py-2 border-b-2 border-gray-300 placeholder-transparent focus:outline-none focus:border-indigo-600"
-                placeholder="Password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+              <Controller
+                name="password"
+                control={control}
+                defaultValue=""
+                render={({ field: { onChange, onBlur, value, ref } }) => (
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    label="Password"
+                    variant="standard"
+                    error={!!errors.password}
+                    helperText={errors.password ? errors.password.message : ""}
+                    value={value}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    inputRef={ref}
+                    fullWidth={true}
+                  />
+                )}
               />
-              <label
-                htmlFor="password"
-                className="absolute left-4 -top-4 text-gray-600 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-gray-400 peer-focus:-top-4 peer-focus:text-gray-600"
-              >
-                Password
-              </label>
+
               {showPassword ? (
                 <VisibilityOff
                   className="absolute right-3 top-3 cursor-pointer"
@@ -108,7 +134,6 @@ const SignInPage = () => {
                 />
               )}
             </div>
-            {error && <p className="text-red-500 text-center">{error}</p>}
             <div className="text-right mb-6">
               <button
                 type="button"
@@ -119,12 +144,14 @@ const SignInPage = () => {
               </button>
             </div>
             <div className="mt-8 mb-6 text-center">
-              <button
+              <CustomButton
                 type="submit"
-                className="w-40 py-3 bg-indigo-600 text-white rounded-full text-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
               >
-                Sign in
-              </button>
+                {isSubmitting ? <Loading size={30} color="white" /> : "Sign In"}
+              </CustomButton>
             </div>
           </form>
         </div>
@@ -146,28 +173,36 @@ const SignInPage = () => {
         </div>
       </div>
 
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Reset Password</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
+      <DialogWrapper open={open} onClose={() => setOpen(false)}>
+        <DialogTitleWrapper>Reset Password</DialogTitleWrapper>
+        <DialogContentWrapper>
+          <Input
+            autoFocus={true}
             margin="dense"
             label="Email Address"
             type="email"
-            fullWidth
+            fullWidth={true}
             value={forgotPasswordEmail}
             onChange={(e) => setForgotPasswordEmail(e.target.value)}
           />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
+        </DialogContentWrapper>
+        <DialogActionsWrapper>
+          <CustomButton
+            onClick={() => setOpen(false)}
+            variant="text"
+            color="primary"
+          >
             Cancel
-          </Button>
-          <Button onClick={handleForgotPassword} color="primary">
+          </CustomButton>
+          <CustomButton
+            onClick={handleForgotPassword}
+            variant="text"
+            color="primary"
+          >
             Reset Password
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </CustomButton>
+        </DialogActionsWrapper>
+      </DialogWrapper>
     </div>
   );
 };

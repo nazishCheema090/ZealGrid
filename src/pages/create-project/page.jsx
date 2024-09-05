@@ -55,7 +55,7 @@ const CreateProject = () => {
                 className="flex-none w-16 h-16 bg-purple-100 rounded-full flex justify-center items-center mr-4 cursor-pointer hover:bg-purple-200 transition"
                 onClick={handleClick}
               >
-                <ArrowBackIcon className="text-purple-500" style={{ fontSize: 32 }} />
+                <ArrowBackIcon className="text-purple-500 " style={{ fontSize: 32 }} />
               </div>
               <h1 className="text-4xl font-bold text-gray-800">Create a Project</h1>
             </div>
