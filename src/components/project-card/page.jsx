@@ -1,7 +1,6 @@
 // src/components/ProjectCard.js
 
-import PropTypes from 'prop-types';
-import ZealGridLogo from '../assets/ZealGrid.svg';
+import ZealGridLogo from '../../assets/ZealGrid.svg';
 import AddIcon from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
 
@@ -38,13 +37,6 @@ const ProjectCard = ({ project }) => {
   );
 };
 
-// Add prop type validations
-ProjectCard.propTypes = {
-  project: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    isAddProject: PropTypes.bool,
-  }).isRequired,
-};
+
 
 export default ProjectCard;

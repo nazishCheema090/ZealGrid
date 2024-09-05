@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 const PhoneNumberForm = ({value, onChangePhone}) => {
 
 
@@ -38,7 +37,3 @@ const PhoneNumberForm = ({value, onChangePhone}) => {
 
 export default PhoneNumberForm;
 
-PhoneNumberForm.propTypes = {
-    value: PropTypes.string.isRequired,
-    onChangePhone: PropTypes.func.isRequired
-}

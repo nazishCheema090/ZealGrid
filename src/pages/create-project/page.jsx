@@ -2,11 +2,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Paper } from '@mui/material';
-import AddProject1 from '../components/AddProject1';
-import AddProject2 from '../components/AddProject2';
-import AddProject3 from '../components/AddProject3';
-import Loading from '../components/Loading';
-import { setStep, setFeatures, setProjectName, saveProjectData } from '../features/project/projectSlice';
+import {AddName, AddLabels, AddInfo} from '../../components/add-project/page'
+import { setStep, setFeatures, setProjectName, saveProjectData } from '../../redux/slice/projectSlice';
+import {toast} from 'react-hot-toast'
 
 const CreateProject = () => {
   const dispatch = useDispatch();
@@ -18,6 +16,7 @@ const CreateProject = () => {
   };
 
   const handleSave = () => {
+
     const data = {
       projectName,
       features,
@@ -26,27 +25,28 @@ const CreateProject = () => {
     // Dispatch the saveProjectData thunk to save the project data
     dispatch(saveProjectData(data)).then((result) => {
       if (result.type === 'project/saveProjectData/fulfilled') {        
-        dispatch(setStep(4)); // Assuming 4 is the loading step or the next step after saving
+        toast.success("Project Created successfully")
+        navigate('/');
+        console.log('projec created');
       } else if (result.type === 'project/saveProjectData/rejected') {
-        // Handle error if needed, show error message, etc.
+        toast.error('Could not create project')
+        navigate('/');
         console.error('Error saving project data:', result.payload);
       }
-      }
-    )};
+      })
+  };
 
     const handleClick = () =>{
       if(step !== 1){
         dispatch(setStep(step-1));
       }else {
-        navigate('/home')
+        navigate('/')
       }
     }
 
   return (
     <>
-      {step === 4 ? (
-        <Loading projectName={projectName} />
-      ) : (
+      
         <div className="flex justify-center items-center h-screen bg-gray-100 font-poppins">
           <Paper className="relative w-full max-w-3xl p-12 rounded-lg shadow-xl transform transition-all duration-500 hover:shadow-2xl">
             {/* Header Row */}
@@ -62,14 +62,14 @@ const CreateProject = () => {
 
             {/* Conditional Rendering of Steps */}
             {step === 1 && (
-              <AddProject1
+              <AddName
                 nextStep={() => dispatch(setStep(step + 1))}
                 projectName={projectName}
                 setProjectName={(name) => dispatch(setProjectName(name))}
               />
             )}
             {step === 2 && (
-              <AddProject2
+              <AddLabels
                 nextStep={() => dispatch(setStep(step + 1))}
                 projectName={projectName}
                 onCheckBoxChange={handleCheckboxChange}
@@ -77,13 +77,13 @@ const CreateProject = () => {
               />
             )}
             {step === 3 && (
-              <AddProject3
+              <AddInfo
                 handleSave={handleSave}
               />
             )}
           </Paper>
         </div>
-      )}
+      
     </>
   );
 };
