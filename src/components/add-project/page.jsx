@@ -247,146 +247,6 @@ const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
     </form>
   );
 };
-const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
-  const dispatch = useDispatch();
-  const step = useSelector((state) => state.project.step);
-
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    trigger,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(checkBoxSchema),
-    defaultValues: {
-      labels: true,
-      navigation: false,
-      toggles: false,
-    },
-  });
-
-  const onSubmit = (data) => {
-    console.log(data);
-    dispatch(setStep(step + 1));
-  };
-
-  useEffect(() => {
-    setValue("labels", features.labels ?? true);
-    setValue("navigation", features.navigation || false);
-    setValue("toggles", features.toggles || false);
-  }, [features, setValue]);
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <div className="ml-20">
-          <div className="mb-6">
-            <p className="text-xl text-gray-600 mb-3">Step 2 of 3</p>
-            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-              <div className="bg-purple-500 h-2 rounded-full w-[66%]"></div>
-            </div>
-          </div>
-          <div className="mb-6">
-            <p className="text-2xl text-gray-700 font-semibold my-3 leading-tight">{`Enter the data for ${projectName} features you want to control`}</p>
-          </div>
-          <div className="mb-12">
-            <div className="flex items-center mt-5">
-              <label className="block text-gray-600 mr-5">{projectName}</label>
-            </div>
-
-            <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">
-              Features
-            </h3>
-
-            <ul className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-              <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                <Controller
-                  name="labels"
-                  control={control}
-                  render={({ field }) => (
-                    <CheckBox
-                      value={field.value}
-                      label="Labels"
-                      name={"Labels"}
-                      onChange={async (e) => {
-                        field.onChange(e.target.checked);
-                        onCheckBoxChange(field.name, e.target.checked);
-                        dispatch(
-                          setFeatures({ ...features, labels: e.target.checked })
-                        );
-                        await trigger("labels");
-                      }}
-                      inputRef={field.ref}
-                    />
-                  )}
-                />
-              </li>
-              <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                <Controller
-                  name="navigation"
-                  control={control}
-                  render={({ field }) => (
-                    <CheckBox
-                      value={field.value}
-                      label="Navigation"
-                      name={"Navigation"}
-                      onChange={(e) => {
-                        field.onChange(e.target.checked);
-                        onCheckBoxChange(field.name, e.target.checked);
-                        dispatch(
-                          setFeatures({
-                            ...features,
-                            navigation: e.target.checked,
-                          })
-                        );
-                      }}
-                      inputRef={field.ref}
-                    />
-                  )}
-                />
-              </li>
-              <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                <Controller
-                  name="toggles"
-                  control={control}
-                  render={({ field }) => (
-                    <CheckBox
-                      value={field.value}
-                      label="Toggles"
-                      name={"Toggles"}
-                      onChange={(e) => {
-                        field.onChange(e.target.checked);
-                        onCheckBoxChange(field.name, e.target.checked);
-                        dispatch(
-                          setFeatures({
-                            ...features,
-                            toggles: e.target.checked,
-                          })
-                        );
-                      }}
-                      inputRef={field.ref}
-                    />
-                  )}
-                />
-              </li>
-            </ul>
-          </div>
-        </div>
-        {errors.labels && (
-          <div className="text-red-500 text-center mb-4">
-            {errors.labels.message}
-          </div>
-        )}
-        <div className="flex justify-center">
-          <CustomButton variant="contained" color="primary" type="submit">
-            Continue
-          </CustomButton>
-        </div>
-      </div>
-    </form>
-  );
-};
 
 const AddInfo = ({ handleSave }) => {
   const dispatch = useDispatch();
@@ -409,148 +269,125 @@ const AddInfo = ({ handleSave }) => {
     await handleSave(data);
   };
 
-  const AddInfo = ({ handleSave }) => {
-    const dispatch = useDispatch();
-    const companyDetail = useSelector((state) => state.project.companyDetail);
-
-    const {
-      control,
-      handleSubmit,
-      formState: { errors, isSubmitting },
-    } = useForm({
-      resolver: zodResolver(companyInfoSchema),
-      defaultValues: {
-        email: companyDetail.email || "",
-        companyName: companyDetail.companyName || "",
-        phone: companyDetail.phone || "",
-      },
-    });
-
-    const onSubmit = async (data) => {
-      await handleSave(data);
-    };
-
-    return (
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <div className="ml-20">
-            <div className="mb-6">
-              <p className="text-xl text-gray-600 mb-3">Step 3 of 3</p>
-              <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                <div className="bg-purple-500 h-2 rounded-full w-full"></div>
-              </div>
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <div className="ml-20">
+          <div className="mb-6">
+            <p className="text-xl text-gray-600 mb-3">Step 3 of 3</p>
+            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+              <div className="bg-purple-500 h-2 rounded-full w-full"></div>
             </div>
-            <div className="mb-6">
-              <p className="text-2xl text-gray-700 font-semibold my-3 leading-tight">{`Enter the data of your Company `}</p>
-            </div>
-            <div className="mb-12">
-              <div className="flex">
-                <div className="mr-5">
-                  <Controller
-                    name="email"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        fullWidth={true}
-                        type="email"
-                        variant="standard"
-                        label="Email"
-                        value={field.value}
-                        className="mb-8"
-                        onChange={(e) => {
-                          field.onChange(e);
-                          dispatch(
-                            setCompanyDetail({
-                              ...companyDetail,
-                              email: e.target.value,
-                            })
-                          );
-                        }}
-                        error={!!errors.email}
-                        helperText={errors.email?.message}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="ml-5">
-                  <Controller
-                    name="companyName"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        fullWidth={true}
-                        type="text"
-                        variant="standard"
-                        label="Company Name"
-                        value={field.value}
-                        className="mb-8"
-                        onChange={(e) => {
-                          field.onChange(e);
-                          dispatch(
-                            setCompanyDetail({
-                              ...companyDetail,
-                              companyName: e.target.value,
-                            })
-                          );
-                        }}
-                        error={!!errors.companyName}
-                        helperText={errors.companyName?.message}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="mt-3">
+          </div>
+          <div className="mb-6">
+            <p className="text-2xl text-gray-700 font-semibold my-3 leading-tight">{`Enter the data of your Company `}</p>
+          </div>
+          <div className="mb-12">
+            <div className="flex">
+              <div className="mr-5">
                 <Controller
-                  name="phone"
+                  name="email"
                   control={control}
                   render={({ field }) => (
-                    <PhoneNumberInput
-                      fullWidth
-                      name="phone"
-                      control={control}
+                    <Input
+                      fullWidth={true}
+                      type="email"
                       variant="standard"
-                      label="Phone"
+                      label="Email"
                       value={field.value}
                       className="mb-8"
-                      onChange={(formattedValue) => {
-                        field.onChange(formattedValue); // Ensure this still updates the form state
+                      onChange={(e) => {
+                        field.onChange(e);
                         dispatch(
                           setCompanyDetail({
                             ...companyDetail,
-                            phone: formattedValue,
+                            email: e.target.value,
                           })
                         );
                       }}
-                      onBlur={field.onBlur}
-                      inputRef={field.ref}
-                      error={!!errors.phone}
-                      helperText={errors.phone?.message}
+                      error={!!errors.email}
+                      helperText={errors.email?.message}
+                    />
+                  )}
+                />
+              </div>
+              <div className="ml-5">
+                <Controller
+                  name="companyName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      fullWidth={true}
+                      type="text"
+                      variant="standard"
+                      label="Company Name"
+                      value={field.value}
+                      className="mb-8"
+                      onChange={(e) => {
+                        field.onChange(e);
+                        dispatch(
+                          setCompanyDetail({
+                            ...companyDetail,
+                            companyName: e.target.value,
+                          })
+                        );
+                      }}
+                      error={!!errors.companyName}
+                      helperText={errors.companyName?.message}
                     />
                   )}
                 />
               </div>
             </div>
-          </div>
-          <div className="flex justify-center">
-            <CustomButton
-              variant="contained"
-              color="primary"
-              type="submit"
-              onClick={handleSubmit}
-            >
-              {isSubmitting ? (
-                <Loading size={30} color="white" thickness={5} />
-              ) : (
-                "Continue"
-              )}
-            </CustomButton>
+            <div className="mt-3">
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field }) => (
+                  <PhoneNumberInput
+                    fullWidth
+                    name="phone"
+                    control={control}
+                    variant="standard"
+                    label="Phone"
+                    value={field.value}
+                    className="mb-8"
+                    onChange={(formattedValue) => {
+                      field.onChange(formattedValue); // Ensure this still updates the form state
+                      dispatch(
+                        setCompanyDetail({
+                          ...companyDetail,
+                          phone: formattedValue,
+                        })
+                      );
+                    }}
+                    onBlur={field.onBlur}
+                    inputRef={field.ref}
+                    error={!!errors.phone}
+                    helperText={errors.phone?.message}
+                  />
+                )}
+              />
+            </div>
           </div>
         </div>
-      </form>
-    );
-  };
+        <div className="flex justify-center">
+          <CustomButton
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={handleSubmit}
+          >
+            {isSubmitting ? (
+              <Loading size={30} color="white" thickness={5} />
+            ) : (
+              "Continue"
+            )}
+          </CustomButton>
+        </div>
+      </div>
+    </form>
+  );
 };
 
-export { AddName, AddLabels, AddInfo };
 export { AddName, AddLabels, AddInfo };
