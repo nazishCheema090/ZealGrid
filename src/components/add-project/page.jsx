@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CheckBox from "../common/CheckBox";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -16,6 +16,8 @@ import { useForm, Controller } from "react-hook-form";
 import PhoneNumberInput from "../common/PhoneNumberInput";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { ref, get, child } from "firebase/database";
+import { database } from "../../config/firebaseConfig";
 
 const nameSchema = z.object({
   fullName: z.string().min(1, "Fullname is required"),
@@ -39,11 +41,14 @@ const companyInfoSchema = z.object({
 });
 
 const AddName = ({ nextStep, setProjectName, projectName }) => {
+  const [errorMessage, setErrorMessage] = useState("");
+  const dispatch = useDispatch();
+
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(nameSchema),
     defaultValues: {
@@ -51,14 +56,47 @@ const AddName = ({ nextStep, setProjectName, projectName }) => {
     },
   });
 
+  const checkIfProjectExists = async (projectName) => {
+    const validProjectName =
+      projectName.charAt(0).toUpperCase() + projectName.slice(1);
+    console.log(validProjectName);
+    const dbRef = ref(database, validProjectName);
+
+    try {
+      // Fetch data from the sanitized project name path
+      console.log(`Checking project at path: projects/${validProjectName}`);
+
+      const snapshot = await get(dbRef);
+
+      // Check if the snapshot exists
+      if (snapshot.exists()) {
+        console.log("Project exists:", snapshot.val());
+        return true;
+      } else {
+        console.log("No project found with that name.");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return false;
+    }
+  };
+
   useEffect(() => {
     reset({ fullName: projectName || "" });
   }, [projectName, reset]);
 
-  const onSubmit = (data) => {
-    setProjectName(data.fullName);
-    console.log(data.fullName);
-    nextStep();
+  const onSubmit = async (data) => {
+    const projectExists = await checkIfProjectExists(data.fullName);
+    dispatch(setProjectName(""));
+    if (projectExists) {
+      setErrorMessage(`Project with the name ${data.fullName} already exists`);
+    } else {
+      setErrorMessage("");
+      setProjectName(data.fullName);
+      console.log(data.fullName);
+      nextStep();
+    }
   };
 
   return (
@@ -87,8 +125,8 @@ const AddName = ({ nextStep, setProjectName, projectName }) => {
                   value={value}
                   onChange={onChange}
                   className="mb-8"
-                  error={Boolean(errors.fullName)}
-                  helperText={errors.fullName?.message}
+                  error={Boolean(errors.fullName) || Boolean(errorMessage)}
+                  helperText={errors.fullName?.message || errorMessage}
                   inputRef={ref}
                 />
               )}
@@ -102,7 +140,7 @@ const AddName = ({ nextStep, setProjectName, projectName }) => {
             onClick={handleSubmit}
             type="submit"
           >
-            Next
+            {isSubmitting ? <Loading size={30} thickness={5} /> : "Next"}
           </CustomButton>
         </div>
       </form>
