@@ -6,6 +6,8 @@ import {
   setStep,
   setCompanyDetail,
   saveProjectData,
+  setProjectName,
+  resetProjectState,
 } from "../../redux/slice/projectSlice";
 import Loading from "../common/Loading";
 import Input from "../common/Input";
@@ -16,14 +18,14 @@ import { useForm, Controller } from "react-hook-form";
 import PhoneNumberInput from "../common/PhoneNumberInput";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { ref, get, child } from "firebase/database";
+import { ref, get } from "firebase/database";
 import { database } from "../../config/firebaseConfig";
 
 const nameSchema = z.object({
   fullName: z.string().min(1, "Fullname is required"),
 });
 
-const checkBoxSchema = z.object({
+const featuresSchema = z.object({
   labels: z.boolean().refine((value) => value === true, {
     message: "Labels must be checked",
   }),
@@ -40,9 +42,10 @@ const companyInfoSchema = z.object({
   phone: z.string().min(10, "phone number must be atleast 10 digits"),
 });
 
-const AddName = ({ nextStep, setProjectName, projectName }) => {
+const AddNameForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
+  const { projectName, step } = useSelector((state) => state.project);
 
   const {
     control,
@@ -57,14 +60,12 @@ const AddName = ({ nextStep, setProjectName, projectName }) => {
   });
 
   const checkIfProjectExists = async (projectName) => {
-    const validProjectName =
-      projectName.charAt(0).toUpperCase() + projectName.slice(1);
-    console.log(validProjectName);
-    const dbRef = ref(database, validProjectName);
+    console.log(projectName);
+    const dbRef = ref(database, projectName);
 
     try {
       // Fetch data from the sanitized project name path
-      console.log(`Checking project at path: projects/${validProjectName}`);
+      console.log(`Checking project at path: projects/${projectName}`);
 
       const snapshot = await get(dbRef);
 
@@ -87,15 +88,18 @@ const AddName = ({ nextStep, setProjectName, projectName }) => {
   }, [projectName, reset]);
 
   const onSubmit = async (data) => {
-    const projectExists = await checkIfProjectExists(data.fullName);
-    dispatch(setProjectName(""));
+    const validProjectName = data.fullName.toLowerCase();
+    const projectExists = await checkIfProjectExists(validProjectName);
     if (projectExists) {
-      setErrorMessage(`Project with the name ${data.fullName} already exists`);
+      setErrorMessage(
+        `Project with the name ${validProjectName} already exists`
+      );
+      reset({ fullName: "" });
     } else {
       setErrorMessage("");
-      setProjectName(data.fullName);
+      dispatch(setProjectName(data.fullName));
       console.log(data.fullName);
-      nextStep();
+      dispatch(setStep(step + 1));
     }
   };
 
@@ -148,9 +152,9 @@ const AddName = ({ nextStep, setProjectName, projectName }) => {
   );
 };
 
-const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
+const AddFeaturesForm = () => {
   const dispatch = useDispatch();
-  const step = useSelector((state) => state.project.step);
+  const { projectName, features, step } = useSelector((state) => state.project);
 
   const {
     control,
@@ -159,7 +163,7 @@ const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
     trigger,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(checkBoxSchema),
+    resolver: zodResolver(featuresSchema),
     defaultValues: {
       labels: true,
       navigation: false,
@@ -212,7 +216,6 @@ const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
                       name={"Labels"}
                       onChange={async (e) => {
                         field.onChange(e.target.checked);
-                        onCheckBoxChange(field.name, e.target.checked);
                         dispatch(
                           setFeatures({ ...features, labels: e.target.checked })
                         );
@@ -234,7 +237,6 @@ const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
                       name={"Navigation"}
                       onChange={(e) => {
                         field.onChange(e.target.checked);
-                        onCheckBoxChange(field.name, e.target.checked);
                         dispatch(
                           setFeatures({
                             ...features,
@@ -258,7 +260,6 @@ const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
                       name={"Toggles"}
                       onChange={(e) => {
                         field.onChange(e.target.checked);
-                        onCheckBoxChange(field.name, e.target.checked);
                         dispatch(
                           setFeatures({
                             ...features,
@@ -289,7 +290,7 @@ const AddLabels = ({ projectName, onCheckBoxChange, features }) => {
   );
 };
 
-const AddInfo = () => {
+const AddInfoForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { companyDetail, projectName, features } = useSelector(
@@ -319,7 +320,8 @@ const AddInfo = () => {
       if (result.type === "project/saveProjectData/fulfilled") {
         toast.success("Project Created successfully");
         navigate("/");
-        console.log("projec created");
+        dispatch(resetProjectState());
+        console.log("project created");
       } else if (result.type === "project/saveProjectData/rejected") {
         toast.error("Could not create project");
         navigate("/");
@@ -449,4 +451,4 @@ const AddInfo = () => {
   );
 };
 
-export { AddName, AddLabels, AddInfo };
+export { AddNameForm, AddFeaturesForm, AddInfoForm };

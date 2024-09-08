@@ -7,7 +7,9 @@ export const saveProjectData = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       // Sanitize the project name to create a valid Firebase path
-      const validProjectName = data.projectName.replace(/[.#$/[\]]/g, "-");
+      const validProjectName = data.projectName
+        .replace(/[.#$/[\]]/g, "-")
+        .toLowerCase();
 
       // Create a reference to the project data in Firebase using the sanitized project name as the root
       const projectRef = ref(database, validProjectName);
@@ -64,6 +66,9 @@ const projectSlice = createSlice({
     setCompanyDetail(state, action) {
       state.companyDetail = action.payload;
     },
+    resetProjectState(state) {
+      return initialState;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -82,6 +87,11 @@ const projectSlice = createSlice({
   },
 });
 
-export const { setStep, setProjectName, setFeatures, setCompanyDetail } =
-  projectSlice.actions;
+export const {
+  setStep,
+  setProjectName,
+  setFeatures,
+  setCompanyDetail,
+  resetProjectState,
+} = projectSlice.actions;
 export default projectSlice.reducer;

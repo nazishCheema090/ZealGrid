@@ -2,22 +2,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Paper } from "@mui/material";
-import { AddName, AddLabels, AddInfo } from "../../components/add-project/page";
 import {
-  setStep,
-  setFeatures,
-  setProjectName,
-} from "../../redux/slice/projectSlice";
-import { toast } from "react-hot-toast";
+  AddNameForm,
+  AddInfoForm,
+  AddFeaturesForm,
+} from "../../components/add-project/page";
+import { setStep } from "../../redux/slice/projectSlice";
 
 const CreateProject = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { step, projectName, features } = useSelector((state) => state.project);
-
-  const handleCheckboxChange = (label, value) => {
-    dispatch(setFeatures({ ...features, [label]: value }));
-  };
+  const { step } = useSelector((state) => state.project);
 
   const handleClick = () => {
     if (step !== 1) {
@@ -48,22 +43,9 @@ const CreateProject = () => {
           </div>
 
           {/* Conditional Rendering of Steps */}
-          {step === 1 && (
-            <AddName
-              nextStep={() => dispatch(setStep(step + 1))}
-              projectName={projectName}
-              setProjectName={(name) => dispatch(setProjectName(name))}
-            />
-          )}
-          {step === 2 && (
-            <AddLabels
-              nextStep={() => dispatch(setStep(step + 1))}
-              projectName={projectName}
-              onCheckBoxChange={handleCheckboxChange}
-              features={features}
-            />
-          )}
-          {step === 3 && <AddInfo />}
+          {step === 1 && <AddNameForm />}
+          {step === 2 && <AddFeaturesForm />}
+          {step === 3 && <AddInfoForm />}
         </Paper>
       </div>
     </>
