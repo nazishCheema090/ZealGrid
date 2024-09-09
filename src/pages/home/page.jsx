@@ -8,9 +8,13 @@ import { useEffect, useState } from "react";
 import { database } from "../../config/firebaseConfig";
 import { get, ref } from "firebase/database";
 import Loading from "../../components/common/Loading";
+import CustomButton from "../../components/common/CustomButton";
+import { useNavigate } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const currentUser = useSelector((state) => state.auth.currentUser);
@@ -52,6 +56,16 @@ const Home = () => {
           <h3 className="text-xl font-bold text-gray-800">
             Your Zeal Grid Projects
           </h3>
+        </div>
+        <div className="flex px-8 ">
+          <CustomButton
+            onClick={() => navigate("/add-project")}
+            variant="contained"
+            className="mb-8"
+            color="primary"
+          >
+            <AddIcon />
+          </CustomButton>
         </div>
         {loading ? (
           <div className="flex items-center justify-center">
