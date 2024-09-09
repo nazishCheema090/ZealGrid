@@ -10,20 +10,46 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import AppsIcon from "@mui/icons-material/Apps";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [active, setActive] = useState("Overview");
+  const { projectName } = useParams();
+  const navigate = useNavigate();
 
   //each item in the sidebar is a seperate nested route of the project-details as project-details/settings
   const menuItems = [
-    { text: "Overview", icon: <DashboardIcon />, route: "/dashboard/overview" },
-    { text: "App | Website", icon: <AppsIcon />, route: "/dashboard/apps" },
+    {
+      text: "Overview",
+      icon: <DashboardIcon />,
+      route: `/project-details/${projectName}`,
+    },
+    {
+      text: "App | Website",
+      icon: <AppsIcon />,
+      route: `/project-details/${projectName}/app`,
+    },
+    {
+      text: "Navigation",
+      icon: <AppsIcon />,
+      route: `/project-details/${projectName}/navigation`,
+    },
+    {
+      text: "labels",
+      icon: <AppsIcon />,
+      route: `/project-details/${projectName}/labels`,
+    },
+    {
+      text: "toggles",
+      icon: <AppsIcon />,
+      route: `/project-details/${projectName}/toggles`,
+    },
     {
       text: "Project Setting",
       icon: <SettingsIcon />,
-      route: "/dashboard/settings",
+      route: `/project-details/${projectName}/settings`,
     },
-    { text: "Logout", icon: <LogoutIcon />, route: "/logout" },
+    { text: "Logout", icon: <LogoutIcon />, route: "#" },
   ];
 
   return (
@@ -38,7 +64,10 @@ const Sidebar = () => {
               className={`hover:bg-gray-700 ${
                 active === item.text && "bg-blue-600"
               }`}
-              onClick={() => setActive(item.text)}
+              onClick={() => {
+                setActive(item.text);
+                navigate(item.route);
+              }}
             >
               <ListItemIcon className="text-white">{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />

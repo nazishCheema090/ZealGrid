@@ -64,12 +64,10 @@ const AddNameForm = () => {
     const dbRef = ref(database, projectName);
 
     try {
-      // Fetch data from the sanitized project name path
       console.log(`Checking project at path: projects/${projectName}`);
 
       const snapshot = await get(dbRef);
 
-      // Check if the snapshot exists
       if (snapshot.exists()) {
         console.log("Project exists:", snapshot.val());
         return true;
@@ -97,8 +95,8 @@ const AddNameForm = () => {
       reset({ fullName: "" });
     } else {
       setErrorMessage("");
-      dispatch(setProjectName(data.fullName));
-      console.log(data.fullName);
+      dispatch(setProjectName(validProjectName));
+      console.log(validProjectName);
       dispatch(setStep(step + 1));
     }
   };

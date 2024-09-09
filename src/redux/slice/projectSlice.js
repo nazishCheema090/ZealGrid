@@ -7,9 +7,7 @@ export const saveProjectData = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       // Sanitize the project name to create a valid Firebase path
-      const validProjectName = data.projectName
-        .replace(/[.#$/[\]]/g, "-")
-        .toLowerCase();
+      const validProjectName = data.projectName.replace(/[.#$/[\]]/g, "-");
 
       // Create a reference to the project data in Firebase using the sanitized project name as the root
       const projectRef = ref(database, validProjectName);

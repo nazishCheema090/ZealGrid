@@ -3,7 +3,6 @@ import UserDetails from "../../components/user-details/page";
 import ProjectList from "../../components/project-list/page";
 import { useSelector, useDispatch } from "react-redux";
 import { signOut } from "../../redux/slice/authSlice";
-// import { projects } from "../../constants/dummyData";
 import { useEffect, useState } from "react";
 import { database } from "../../config/firebaseConfig";
 import { get, ref } from "firebase/database";
@@ -23,27 +22,27 @@ const Home = () => {
     dispatch(signOut());
   };
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const projectRef = ref(database);
-        const snapshot = await get(projectRef);
+  const fetchProjects = async () => {
+    try {
+      const projectRef = ref(database);
+      const snapshot = await get(projectRef);
 
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          const projectArray = Object.keys(data).map((key) => ({
-            id: key,
-            name: key,
-            ...data[key],
-          }));
-          setProjects(projectArray);
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching the projects:", error);
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const projectArray = Object.keys(data).map((key) => ({
+          id: key,
+          name: key,
+          ...data[key],
+        }));
+        setProjects(projectArray);
       }
-    };
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching the projects:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchProjects();
   }, []);
 
@@ -57,7 +56,7 @@ const Home = () => {
             Your Zeal Grid Projects
           </h3>
         </div>
-        <div className="flex px-8 ">
+        <div className="mx-auto">
           <CustomButton
             onClick={() => navigate("/add-project")}
             variant="contained"

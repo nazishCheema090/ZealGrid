@@ -1,7 +1,4 @@
-// src/components/ProjectCard.js
-
 import ZealGridLogo from "../../assets/ZealGrid.svg";
-import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 
 const ProjectCard = ({ project }) => {

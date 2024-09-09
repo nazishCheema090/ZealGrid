@@ -7,6 +7,10 @@ import PageNotFound from "../pages/page-not-found/page";
 import ProjectDetails from "../pages/project-details/page";
 import Overview from "../pages/overview/page";
 import Settings from "../pages/settings/page";
+import Labels from "../pages/labels/page";
+import Toggles from "../pages/toggles/page";
+import Navigation from "../pages/navigation/page";
+import ProjectApp from "../pages/project-app/page";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +34,7 @@ const router = createBrowserRouter([
     element: <SignInPage />,
   },
   {
-    path: "/project-details",
+    path: "/project-details/:projectName",
     element: (
       <PrivateRoute>
         <ProjectDetails />
@@ -38,12 +42,28 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "overview",
+        index: true,
         element: <Overview />,
       },
       {
         path: "settings",
         element: <Settings />,
+      },
+      {
+        path: "labels",
+        element: <Labels />,
+      },
+      {
+        path: "toggles",
+        element: <Toggles />,
+      },
+      {
+        path: "navigation",
+        element: <Navigation />,
+      },
+      {
+        path: "app",
+        element: <ProjectApp />,
       },
     ],
   },
