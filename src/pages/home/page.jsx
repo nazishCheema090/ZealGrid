@@ -54,8 +54,13 @@ const Home = () => {
           </h3>
         </div>
         {loading ? (
-          <div className="flex items-center justify-center mt-10 ">
-            <Loading size={50} thickness={5} color="primary" />
+          <div className="flex items-center justify-center">
+            <Loading
+              size={50}
+              thickness={5}
+              color="primary"
+              className="mt-20"
+            />
           </div>
         ) : (
           <ProjectList projects={projects} />
