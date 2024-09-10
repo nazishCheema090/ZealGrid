@@ -1,5 +1,4 @@
 import Header from "../../components/header/page";
-import UserDetails from "../../components/user-details/page";
 import ProjectList from "../../components/project-list/page";
 import { useSelector, useDispatch } from "react-redux";
 import { signOut } from "../../redux/slice/authSlice";
@@ -14,7 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [projects, setProjects] = useState([]);
+  const [projectList, setProjectList] = useState([]);
   const [loading, setLoading] = useState(true);
   const currentUser = useSelector((state) => state.auth.currentUser);
 
@@ -34,7 +33,7 @@ const Home = () => {
           name: key,
           ...data[key],
         }));
-        setProjects(projectArray);
+        setProjectList(projectArray);
       }
       setLoading(false);
     } catch (error) {
@@ -50,13 +49,10 @@ const Home = () => {
     <div className="min-h-screen bg-white p-8">
       <div className="max-w-7xl mx-auto">
         <Header currentUser={currentUser} signOut={handleSignOut} />
-        <UserDetails currentUser={currentUser} />
-        <div className="mb-6">
+        <div className="mb-6 flex justify-between ">
           <h3 className="text-xl font-bold text-gray-800">
             Your Zeal Grid Projects
           </h3>
-        </div>
-        <div className="mx-auto">
           <CustomButton
             onClick={() => navigate("/add-project")}
             variant="contained"
@@ -66,6 +62,7 @@ const Home = () => {
             <AddIcon />
           </CustomButton>
         </div>
+        <div className=" flex justify-end  "></div>
         {loading ? (
           <div className="flex items-center justify-center">
             <Loading
@@ -76,7 +73,7 @@ const Home = () => {
             />
           </div>
         ) : (
-          <ProjectList projects={projects} />
+          <ProjectList projects={projectList} />
         )}
       </div>
     </div>

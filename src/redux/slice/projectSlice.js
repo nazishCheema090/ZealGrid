@@ -64,7 +64,7 @@ const projectSlice = createSlice({
     setCompanyDetail(state, action) {
       state.companyDetail = action.payload;
     },
-    resetProjectState(state) {
+    resetProjectState() {
       return initialState;
     },
   },
