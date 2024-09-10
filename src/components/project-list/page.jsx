@@ -1,6 +1,4 @@
-// src/components/ProjectList.js
-
-import ProjectCard from  '../project-card/page';
+import ProjectCard from "../project-card/page";
 
 const ProjectList = ({ projects }) => {
   return (
@@ -13,7 +11,5 @@ const ProjectList = ({ projects }) => {
     </div>
   );
 };
-
-
 
 export default ProjectList;

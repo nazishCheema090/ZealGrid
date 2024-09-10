@@ -64,6 +64,9 @@ const projectSlice = createSlice({
     setCompanyDetail(state, action) {
       state.companyDetail = action.payload;
     },
+    resetProjectState() {
+      return initialState;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -82,6 +85,11 @@ const projectSlice = createSlice({
   },
 });
 
-export const { setStep, setProjectName, setFeatures, setCompanyDetail } =
-  projectSlice.actions;
+export const {
+  setStep,
+  setProjectName,
+  setFeatures,
+  setCompanyDetail,
+  resetProjectState,
+} = projectSlice.actions;
 export default projectSlice.reducer;
