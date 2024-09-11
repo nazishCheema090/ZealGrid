@@ -54,10 +54,13 @@ const Sidebar = () => {
     if (pathnames.length === 2 && pathnames[1] === projectName) {
       setActiveItem("overview");
     }
+    if (pathnames.length === 3 && pathnames[2] !== activeItem) {
+      setActiveItem(pathnames[2]);
+    }
   }, [location.pathname, projectName]);
 
   return (
-    <div className="bg-[#333333] text-white h-screen w-[100px] sm:w-64">
+    <div className="bg-[#333333] text-white h-[120vh] w-[100px] sm:w-64">
       <div className="flex items-center justify-center pt-[35px] pb-[60px] ">
         <img
           src={logo}
