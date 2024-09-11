@@ -7,41 +7,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import {
-  app,
-  labels,
-  navigation,
-  overview,
-  settings,
-  logo,
-} from "../../constants/sidebarIcons";
-
-const sidebarItems = [
-  {
-    text: "overview",
-    icon: <img src={overview} alt="overview icon" className="w-6 h-6 " />,
-  },
-  {
-    text: "app",
-    icon: <img src={app} alt="app icon" className="w-6 h-8 " />,
-  },
-  {
-    text: "navigation",
-    icon: <img src={navigation} alt="navigation icon" className="w-6 h-6 " />,
-  },
-  {
-    text: "labels",
-    icon: <img src={labels} alt="labels icon" className="w-6 h-6 " />,
-  },
-  {
-    text: "toggles",
-    icon: <img src={settings} alt="overview icon" className="w-6 h-6 " />,
-  },
-  {
-    text: "settings",
-    icon: <img src={settings} alt="overview icon" className="w-6 h-6" />,
-  },
-];
+import { sidebarItems, logo } from "../../constants.jsx";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -60,6 +26,7 @@ const Sidebar = () => {
   }, [location.pathname, projectName]);
 
   return (
+    //use the icons from the updated design later also later use the toggles icon for toggles.
     <div className="bg-[#333333] text-white h-[120vh] w-[100px] sm:w-64">
       <div className="flex items-center justify-center pt-[35px] pb-[60px] ">
         <img
@@ -92,9 +59,9 @@ const Sidebar = () => {
                 onClick={() => {
                   setActiveItem(item.text);
                   if (item.text == "overview") {
-                    navigate(`/project-details/${projectName}`);
+                    navigate(`/dashboard/${projectName}`);
                   } else {
-                    navigate(`/project-details/${projectName}/${item.text}`);
+                    navigate(`/dashboard/${projectName}/${item.text}`);
                   }
                 }}
               >

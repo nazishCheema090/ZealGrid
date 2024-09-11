@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const ProjectCard = ({ project }) => {
   return (
     <Link
-      to={`/project-details/${project.name}`}
+      to={`/dashboard/${project.name}`}
       className="flex flex-col items-center justify-center rounded-lg 
       w-full h-[200px] no-underline shadow-lg p-4 transition-transform
       transform hover:scale-105 hover:shadow-xl bg-custom-gradient"

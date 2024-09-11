@@ -4,13 +4,13 @@ import Home from "../pages/home/page";
 import CreateProject from "../pages/create-project/page";
 import SignInPage from "../pages/sign-in/page";
 import PageNotFound from "../pages/page-not-found/page";
-import ProjectDetails from "../pages/project-details/page";
 import Overview from "../pages/overview/page";
 import Settings from "../pages/settings/page";
 import Labels from "../pages/labels/page";
 import Toggles from "../pages/toggles/page";
 import Navigation from "../pages/navigation/page";
 import ProjectApp from "../pages/project-app/page";
+import Dashboard from "../pages/dashboard/page";
 
 const router = createBrowserRouter([
   {
@@ -34,10 +34,10 @@ const router = createBrowserRouter([
     element: <SignInPage />,
   },
   {
-    path: "/project-details/:projectName",
+    path: "/dashboard/:projectName",
     element: (
       <PrivateRoute>
-        <ProjectDetails />
+        <Dashboard />
       </PrivateRoute>
     ),
     children: [

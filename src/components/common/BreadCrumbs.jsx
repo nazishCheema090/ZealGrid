@@ -12,14 +12,11 @@ const BreadcrumbsComponent = () => {
       aria-label="breadcrumb"
       separator={<Typography sx={{ fontSize: "2rem" }}>/</Typography>}
     >
-      <Link
-        to={`/project-details/${projectName}`}
-        className="text-gray-500 text-2xl"
-      >
+      <Link to={`/dashboard/${projectName}`} className="text-gray-500 text-2xl">
         Dashboard
       </Link>
 
-      {pathnames.length === 2 && pathnames[0] === "project-details" && (
+      {pathnames.length === 2 && pathnames[0] === "dashboard" && (
         <Typography
           color="textPrimary"
           sx={{
@@ -31,12 +28,11 @@ const BreadcrumbsComponent = () => {
       )}
 
       {pathnames.map((value, index) => {
-        if (value === projectName || value === "project-details") return null;
+        if (value === projectName || value === "dashboard") return null;
 
-        const isLast = index === pathnames.length - 1;
         const to = `/${pathnames.slice(0, index + 1).join("/")}`;
 
-        return isLast ? (
+        return (
           <Typography
             color="textPrimary"
             sx={{
@@ -46,10 +42,6 @@ const BreadcrumbsComponent = () => {
           >
             {value}
           </Typography>
-        ) : (
-          <Link to={to} key={to} className="text-gray-500 text-2xl ">
-            {value}
-          </Link>
         );
       })}
     </Breadcrumbs>

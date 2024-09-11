@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Typography } from "@mui/material";
+import OverviewCard from "../../components/common/OverviewCard";
+import { cardItems } from "../../constants";
 
 const Overview = () => {
   const { projectName } = useParams();
@@ -12,7 +13,17 @@ const Overview = () => {
         Design a promising website to scale your business better and
         <br /> bigger. Zeal grid is providing all you need.
       </span>
-      <div className="flex flex-wrap">Card</div>
+      <div className="flex flex-wrap gap-4 w-full mr-10">
+        {cardItems.map((item) => (
+          <OverviewCard
+            key={item.title}
+            cardIcon={item.icon}
+            cardTitle={item.title}
+            cardDescription={item.description}
+            projectName={projectName}
+          />
+        ))}
+      </div>
     </div>
   );
 };
