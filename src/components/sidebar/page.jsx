@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   List,
   ListItem,
@@ -6,9 +6,8 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
-  toggles,
   app,
   labels,
   navigation,
@@ -47,7 +46,15 @@ const sidebarItems = [
 const Sidebar = () => {
   const navigate = useNavigate();
   const { projectName } = useParams();
+  const location = useLocation();
   const [activeItem, setActiveItem] = useState("overview");
+
+  useEffect(() => {
+    const pathnames = location.pathname.split("/").filter((x) => x);
+    if (pathnames.length === 2 && pathnames[1] === projectName) {
+      setActiveItem("overview");
+    }
+  }, [location.pathname, projectName]);
 
   return (
     <div className="bg-[#333333] text-white h-screen w-[100px] sm:w-64">
