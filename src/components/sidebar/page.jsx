@@ -20,53 +20,27 @@ import {
 const sidebarItems = [
   {
     text: "overview",
-    icon: (
-      <img
-        src={overview}
-        alt="overview icon"
-        className="w-6 h-6 cursor-pointer"
-      />
-    ),
+    icon: <img src={overview} alt="overview icon" className="w-6 h-6 " />,
   },
   {
     text: "app",
-    icon: <img src={app} alt="app icon" className="w-6 h-8 cursor-pointer" />,
+    icon: <img src={app} alt="app icon" className="w-6 h-8 " />,
   },
   {
     text: "navigation",
-    icon: (
-      <img
-        src={navigation}
-        alt="navigation icon"
-        className="w-6 h-6 cursor-pointer"
-      />
-    ),
+    icon: <img src={navigation} alt="navigation icon" className="w-6 h-6 " />,
   },
   {
     text: "labels",
-    icon: (
-      <img src={labels} alt="labels icon" className="w-6 h-6 cursor-pointer" />
-    ),
+    icon: <img src={labels} alt="labels icon" className="w-6 h-6 " />,
   },
   {
     text: "toggles",
-    icon: (
-      <img
-        src={toggles}
-        alt="toggles icon"
-        className="w-10 h-6 cursor-pointer"
-      />
-    ),
+    icon: <img src={settings} alt="overview icon" className="w-6 h-6 " />,
   },
   {
     text: "settings",
-    icon: (
-      <img
-        src={settings}
-        alt="overview icon"
-        className="w-6 h-6 cursor-pointer"
-      />
-    ),
+    icon: <img src={settings} alt="overview icon" className="w-6 h-6" />,
   },
 ];
 
@@ -76,8 +50,8 @@ const Sidebar = () => {
   const [activeItem, setActiveItem] = useState("overview");
 
   return (
-    <div className="bg-gray-800 text-white h-screen w-[100px] sm:w-64">
-      <div className="flex items-center justify-center pt-[35px] pb-[70px] ">
+    <div className="bg-[#333333] text-white h-screen w-[100px] sm:w-64">
+      <div className="flex items-center justify-center pt-[35px] pb-[60px] ">
         <img
           src={logo}
           className="w-40 h-8 cursor-pointer hidden sm:block"
@@ -104,6 +78,7 @@ const Sidebar = () => {
                   },
                   borderRadius: "10px",
                 }}
+                className="flex items-center"
                 onClick={() => {
                   setActiveItem(item.text);
                   if (item.text == "overview") {
@@ -113,10 +88,16 @@ const Sidebar = () => {
                   }
                 }}
               >
-                <ListItemIcon className="">{item.icon}</ListItemIcon>
+                <ListItemIcon
+                  sx={{
+                    minWidth: "30px",
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
                 <ListItemText
                   primary={item.text}
-                  className="text-gray-300 hidden sm:block"
+                  className="text-gray-300 px-1 hidden sm:block"
                 />
               </ListItemButton>
             </ListItem>
