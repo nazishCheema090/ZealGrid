@@ -9,16 +9,18 @@ import Loading from "../../components/common/Loading";
 import CustomButton from "../../components/common/CustomButton";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
+import { useSignOut } from "../../hooks/useSignOut";
 
 const Home = () => {
-  const dispatch = useDispatch();
+  const { mutate: signOut } = useSignOut();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
   const [projectList, setProjectList] = useState([]);
   const [loading, setLoading] = useState(true);
   const currentUser = useSelector((state) => state.auth.currentUser);
 
   const handleSignOut = () => {
-    dispatch(signOut());
+    signOut();
   };
 
   const fetchProjects = async () => {
