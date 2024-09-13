@@ -1,49 +1,22 @@
 import Header from "../../components/header/page";
 import ProjectList from "../../components/project-list/page";
-import { useEffect, useState } from "react";
-import { database } from "../../config/firebaseConfig";
-import { get, ref } from "firebase/database";
 import Loading from "../../components/common/Loading";
 import CustomButton from "../../components/common/CustomButton";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { useSignOut } from "../../hooks/useSignOut";
 import { useAuthState } from "../../hooks/useAuthState";
+import { useFetchProjects } from "../../hooks/useFetchProjects";
 
 const Home = () => {
   const { mutate: signOut } = useSignOut();
   const { data: currentUser } = useAuthState();
+  const { data: projectList = [], isLoading } = useFetchProjects();
   const navigate = useNavigate();
-  const [projectList, setProjectList] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const handleSignOut = () => {
     signOut();
   };
-
-  const fetchProjects = async () => {
-    try {
-      const projectRef = ref(database);
-      const snapshot = await get(projectRef);
-
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        const projectArray = Object.keys(data).map((key) => ({
-          id: key,
-          name: key,
-          ...data[key],
-        }));
-        setProjectList(projectArray);
-      }
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching the projects:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
 
   return (
     <div className="min-h-screen bg-white p-8">
@@ -63,7 +36,7 @@ const Home = () => {
           </CustomButton>
         </div>
         <div className=" flex justify-end  "></div>
-        {loading ? (
+        {isLoading ? (
           <div className="flex items-center justify-center">
             <Loading
               size={50}

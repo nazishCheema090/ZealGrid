@@ -1,39 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { database } from "../../config/firebaseConfig";
-import { ref, set } from "firebase/database";
-
-export const saveProjectData = createAsyncThunk(
-  "project/saveProjectData",
-  async (data, thunkAPI) => {
-    try {
-      // Sanitize the project name to create a valid Firebase path
-      const validProjectName = data.projectName.replace(/[.#$/[\]]/g, "-");
-
-      // Create a reference to the project data in Firebase using the sanitized project name as the root
-      const projectRef = ref(database, validProjectName);
-
-      // Format the data correctly
-      const formattedData = {
-        company_detail: {
-          email: data.companyDetail.email,
-          name: data.companyDetail.companyName,
-          phone_number: data.companyDetail.phone,
-        },
-        features: {
-          labels: data.features.labels || false,
-          navigation: data.features.navigation || false,
-          toogles: data.features.toogles || false,
-        },
-      };
-
-      await set(projectRef, formattedData);
-
-      return formattedData;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-);
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   step: 1,
@@ -44,8 +9,6 @@ const initialState = {
     companyName: "",
     phone: "",
   },
-  loading: false,
-  error: null,
 };
 
 const projectSlice = createSlice({
@@ -67,21 +30,6 @@ const projectSlice = createSlice({
     resetProjectState() {
       return initialState;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(saveProjectData.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(saveProjectData.fulfilled, (state) => {
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(saveProjectData.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
   },
 });
 
