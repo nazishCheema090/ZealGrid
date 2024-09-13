@@ -8,7 +8,7 @@ export default {
       },
       backgroundImage: {
         "custom-gradient":
-          "linear-gradient(to right, #7065F0, rgba(64, 58, 138, 0.7))",
+          "linear-gradient(180deg, #175CFF 0%, rgba(82, 124, 225, 0.7) 100%)",
       },
     },
   },

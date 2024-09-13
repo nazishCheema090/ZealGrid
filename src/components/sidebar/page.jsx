@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   List,
   ListItem,
@@ -6,79 +6,81 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import AppsIcon from "@mui/icons-material/Apps";
-import SettingsIcon from "@mui/icons-material/Settings";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { useParams, useNavigate } from "react-router-dom";
-
-const menuItems = [
-  {
-    text: "overview",
-    icon: <DashboardIcon />,
-  },
-  {
-    text: "app",
-    icon: <AppsIcon />,
-  },
-  {
-    text: "navigation",
-    icon: <AppsIcon />,
-  },
-  {
-    text: "labels",
-    icon: <AppsIcon />,
-  },
-  {
-    text: "toggles",
-    icon: <AppsIcon />,
-  },
-  {
-    text: "settings",
-    icon: <SettingsIcon />,
-  },
-  { text: "logout", icon: <LogoutIcon />, route: "#" },
-];
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { sidebarItems, logo } from "../../constants.jsx";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const { projectName } = useParams();
-  const [activeItem, setActiveItem] = useState("Overview");
+  const location = useLocation();
+  const [activeItem, setActiveItem] = useState("overview");
+
+  useEffect(() => {
+    const pathnames = location.pathname.split("/").filter((x) => x);
+    if (pathnames.length === 2 && pathnames[1] === projectName) {
+      setActiveItem("overview");
+    }
+    if (pathnames.length === 3 && pathnames[2] !== activeItem) {
+      setActiveItem(pathnames[2]);
+    }
+  }, [location.pathname, projectName]);
 
   return (
-    <div className="bg-gray-800 text-white h-screen w-64">
-      <div className="flex items-center justify-center py-6">
-        <h1
-          className="text-2xl font-bold cursor-pointer "
+    //use the icons from the updated design later also later use the toggles icon for toggles.
+    <div className="bg-[#333333] text-white h-[120vh] w-[100px] sm:w-64">
+      <div className="flex items-center justify-center pt-[35px] pb-[60px] ">
+        <img
+          src={logo}
+          className="w-40 h-8 cursor-pointer hidden sm:block"
+          alt="Zealgrid logo"
           onClick={() => navigate("/")}
-        >
-          ZealGrid
-        </h1>
+        />
       </div>
-      <List>
-        {menuItems.map((item) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton
-              className={`hover:bg-gray-700 ${
-                activeItem === item.text && "bg-blue-600"
-              }`}
-              onClick={() => {
-                setActiveItem(item.text);
-                if (item.text == "overview") {
-                  navigate(`/project-details/${projectName}`);
-                } else if (item.text == "logout") {
-                  navigate("#");
-                } else {
-                  navigate(`/project-details/${projectName}/${item.text}`);
-                }
-              }}
-            >
-              <ListItemIcon className="text-white">{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      <div className="text-gray-200 px-6 ">
+        <span className="text-gray-300 hidden sm:block ">Dashboard</span>
+      </div>
+      <div className="px-4">
+        <List className="flex flex-col justify-center">
+          {sidebarItems.map((item) => (
+            <ListItem key={item.text} disablePadding className="pb-1">
+              <ListItemButton
+                sx={{
+                  background:
+                    activeItem === item.text
+                      ? "linear-gradient(90deg, #175CFF 0%, rgba(23, 92, 255, 0.2) 81.79%)"
+                      : "inherit",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(90deg, #175CFF 0%, rgba(23, 92, 255, 0.2) 81.79%)",
+                  },
+                  borderRadius: "10px",
+                }}
+                className="flex items-center"
+                onClick={() => {
+                  setActiveItem(item.text);
+                  if (item.text == "overview") {
+                    navigate(`/dashboard/${projectName}`);
+                  } else {
+                    navigate(`/dashboard/${projectName}/${item.text}`);
+                  }
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: "30px",
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.text}
+                  className="text-gray-300 px-1 hidden sm:block"
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </div>
     </div>
   );
 };
