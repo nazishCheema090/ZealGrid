@@ -1,7 +1,5 @@
 import Header from "../../components/header/page";
 import ProjectList from "../../components/project-list/page";
-import { useSelector, useDispatch } from "react-redux";
-import { signOut } from "../../redux/slice/authSlice";
 import { useEffect, useState } from "react";
 import { database } from "../../config/firebaseConfig";
 import { get, ref } from "firebase/database";
@@ -10,14 +8,14 @@ import CustomButton from "../../components/common/CustomButton";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { useSignOut } from "../../hooks/useSignOut";
+import { useAuthState } from "../../hooks/useAuthState";
 
 const Home = () => {
   const { mutate: signOut } = useSignOut();
-  // const dispatch = useDispatch();
+  const { data: currentUser } = useAuthState();
   const navigate = useNavigate();
   const [projectList, setProjectList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const currentUser = useSelector((state) => state.auth.currentUser);
 
   const handleSignOut = () => {
     signOut();

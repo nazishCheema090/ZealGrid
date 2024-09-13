@@ -5,7 +5,6 @@ import ZealGrid from "../../assets/ZealGrid.svg";
 import RadioButton from "../../assets/RadioButton.svg";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { resetPassword } from "../../redux/slice/authSlice";
 import Input from "../../components/common/Input";
 import CustomButton from "../../components/common/CustomButton";
 import Loading from "../../components/common/Loading";
@@ -18,6 +17,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { useSignIn } from "../../hooks/useSignIn";
 import { useAuthState } from "../../hooks/useAuthState";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../../config/firebaseConfig";
 
 const signInSchema = z.object({
   email: z
@@ -31,12 +32,11 @@ const signInSchema = z.object({
 
 const SignInPage = () => {
   const { mutateAsync: signIn } = useSignIn();
-  const { data: currentUser, isLoading } = useAuthState();
+  const { data: currentUser } = useAuthState();
   const [showPassword, setShowPassword] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [resetPasswordError, setResetPasswordError] = useState("");
   const [open, setOpen] = useState(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const {
@@ -66,11 +66,12 @@ const SignInPage = () => {
 
   const handleForgotPassword = async () => {
     try {
-      await dispatch(resetPassword(forgotPasswordEmail)).unwrap();
+      await sendPasswordResetEmail(auth, forgotPasswordEmail);
       setForgotPasswordEmail("");
       setOpen(false);
       alert("Password reset email sent");
     } catch (error) {
+      console.error("Error resetting the password: ", error.message);
       setResetPasswordError("Could not reset password");
     }
   };
