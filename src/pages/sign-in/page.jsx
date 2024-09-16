@@ -5,7 +5,6 @@ import ZealGrid from "../../assets/ZealGrid.svg";
 import RadioButton from "../../assets/RadioButton.svg";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { signIn, resetPassword } from "../../redux/slice/authSlice";
 import Input from "../../components/common/Input";
 import CustomButton from "../../components/common/CustomButton";
 import Loading from "../../components/common/Loading";
@@ -16,6 +15,10 @@ import DialogContentWrapper from "../../components/common/DialogContentWrapper";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
+import { useSignIn } from "../../hooks/useSignIn";
+import { useAuthState } from "../../hooks/useAuthState";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../../config/firebaseConfig";
 
 const signInSchema = z.object({
   email: z
@@ -28,14 +31,13 @@ const signInSchema = z.object({
 });
 
 const SignInPage = () => {
+  const { mutateAsync: signIn } = useSignIn();
+  const { data: currentUser } = useAuthState();
   const [showPassword, setShowPassword] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [resetPasswordError, setResetPasswordError] = useState("");
   const [open, setOpen] = useState(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { currentUser } = useSelector((state) => state.auth);
 
   const {
     handleSubmit,
@@ -50,11 +52,11 @@ const SignInPage = () => {
     if (currentUser) {
       navigate("/");
     }
-  }, []);
+  }, [currentUser, navigate]);
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(signIn(data)).unwrap();
+      await signIn(data);
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -64,11 +66,12 @@ const SignInPage = () => {
 
   const handleForgotPassword = async () => {
     try {
-      await dispatch(resetPassword(forgotPasswordEmail)).unwrap();
+      await sendPasswordResetEmail(auth, forgotPasswordEmail);
       setForgotPasswordEmail("");
       setOpen(false);
       alert("Password reset email sent");
     } catch (error) {
+      console.error("Error resetting the password: ", error.message);
       setResetPasswordError("Could not reset password");
     }
   };

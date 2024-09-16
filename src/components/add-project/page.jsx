@@ -5,7 +5,6 @@ import {
   setFeatures,
   setStep,
   setCompanyDetail,
-  saveProjectData,
   setProjectName,
   resetProjectState,
 } from "../../redux/slice/projectSlice";
@@ -16,10 +15,10 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import PhoneNumberInput from "../common/PhoneNumberInput";
-import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { ref, get } from "firebase/database";
 import { database } from "../../config/firebaseConfig";
+import { saveProjectData } from "../../lib/utils/saveProjectData";
 
 const nameSchema = z.object({
   fullName: z.string().min(1, "Fullname is required"),
@@ -37,8 +36,8 @@ const companyInfoSchema = z.object({
   email: z
     .string()
     .min(1, { message: "Email is required" })
-    .email("invalid email is required"),
-  companyName: z.string().min(1, { message: "Company name is rewuired" }),
+    .email("invalid email is address"),
+  companyName: z.string().min(1, { message: "Company name is required" }),
   phone: z.string().min(10, "phone number must be atleast 10 digits"),
 });
 
@@ -314,18 +313,10 @@ const AddInfoForm = () => {
       features,
       companyDetail,
     };
-    await dispatch(saveProjectData(data)).then((result) => {
-      if (result.type === "project/saveProjectData/fulfilled") {
-        toast.success("Project Created successfully");
-        navigate("/");
-        dispatch(resetProjectState());
-        console.log("project created");
-      } else if (result.type === "project/saveProjectData/rejected") {
-        toast.error("Could not create project");
-        navigate("/");
-        console.error("Error saving project data:", result.payload);
-      }
-    });
+
+    await saveProjectData(data);
+    dispatch(resetProjectState());
+    navigate(`/dashboard/${projectName}`);
   };
 
   return (
