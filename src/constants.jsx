@@ -52,6 +52,72 @@ export const cardItems = [
   },
 ];
 
+export const labelsListItems = [
+  {
+    label: {
+      name: "Sign-in",
+      labelItems: [
+        {
+          itemName: "Header",
+          itemValue: "sign-in to continue",
+        },
+        {
+          itemName: "Title",
+          itemValue: "sign-in",
+        },
+        {
+          itemName: "Footer",
+          itemValue: "sign-in to continue",
+        },
+      ],
+    },
+  },
+  {
+    label: {
+      name: "Sign-up",
+      labelItems: [
+        {
+          itemName: "Header",
+          itemValue: "sign-up to continue",
+        },
+        {
+          itemName: "Title",
+          itemValue: "sign-up",
+        },
+        {
+          itemName: "Footer",
+          itemValue: "sign-up to continue",
+        },
+      ],
+    },
+  },
+  {
+    label: {
+      name: "Home",
+      labelItems: [
+        {
+          itemName: "Header",
+          itemValue: "Welcome to the netflix",
+        },
+        {
+          itemName: "Title",
+          itemValue: "Netflix",
+        },
+        {
+          itemName: "Footer",
+          itemValue: "Welcome to netflix",
+        },
+      ],
+    },
+  },
+];
+
+export const navigationListItems = [
+  { name: "Sign-in", number: "01" },
+  { name: "Sign-up", number: "02" },
+  { name: "Home", number: "03" },
+];
+
 export {
   overview,
   app,
