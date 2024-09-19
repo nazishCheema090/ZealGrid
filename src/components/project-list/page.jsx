@@ -16,7 +16,8 @@ const ProjectList = ({ projects }) => {
     (currentPage - 1) * projectsPerPage,
     currentPage * projectsPerPage
   );
-
+  // onchange of pagination accepts two arguments: first is event and second is value,
+  // we need the value not the event so I'm passing arguments as (_,value)
   const handlePageChange = (_, value) => {
     setCurrentPage(value);
   };

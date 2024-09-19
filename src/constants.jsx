@@ -5,6 +5,8 @@ import labels from "./assets/labels.png";
 import navigation from "./assets/navigation.png";
 import settings from "./assets/settings.png";
 import logo from "./assets/logo.png";
+import deleteIcon from "./assets/deleteIcon.png";
+import updateIcon from "./assets/updateIcon.png";
 export const sidebarItems = [
   {
     text: "overview",
@@ -50,4 +52,14 @@ export const cardItems = [
   },
 ];
 
-export { overview, app, toggles, labels, navigation, settings, logo };
+export {
+  overview,
+  app,
+  toggles,
+  labels,
+  navigation,
+  settings,
+  logo,
+  deleteIcon,
+  updateIcon,
+};
