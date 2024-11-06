@@ -7,6 +7,8 @@ const DashboardListItem = ({
   value = "",
   isLabels = false,
   onClick = () => {},
+  onDelete = () => {},
+  onUpdate = () => {},
 }) => {
   return (
     <div
@@ -25,13 +27,16 @@ const DashboardListItem = ({
 
           <div className="flex justify-end items-center pr-[50px]">
             <CustomButton
-              onClick={() => console.log("update")}
+              onClick={(e) => {
+                e.stopPropagation();
+                onUpdate();
+              }}
               variant="text"
               width="28px"
               sx={{
                 "&:hover": {
-                  backgroundColor: "transparent", // No hover background color
-                  boxShadow: "none", // Remove hover shadow if needed
+                  backgroundColor: "transparent",
+                  boxShadow: "none",
                 },
               }}
             >
@@ -39,18 +44,21 @@ const DashboardListItem = ({
             </CustomButton>
             <div className="h-[40px] w-[3px] bg-gray-600 " />
             <CustomButton
-              onClick={() => console.log("delete")}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
               variant="text"
               width="28px"
               sx={{
                 "&:hover": {
-                  backgroundColor: "transparent", // No hover background color
-                  boxShadow: "none", // Remove hover shadow if needed
+                  backgroundColor: "transparent",
+                  boxShadow: "none",
                 },
               }}
             >
               <img src={deleteIcon} alt="delete" className="w-7 h-7" />
-            </CustomButton>{" "}
+            </CustomButton>
           </div>
         </>
       )}

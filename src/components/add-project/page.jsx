@@ -170,6 +170,7 @@ const AddFeaturesForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+    dispatch(setFeatures(data)); // Update features in Redux
     dispatch(setStep(step + 1));
   };
 
@@ -254,7 +255,7 @@ const AddFeaturesForm = () => {
                     <CheckBox
                       value={field.value}
                       label="Toggles"
-                      name={"Toggles"}
+                      name={"toggles"}
                       onChange={(e) => {
                         field.onChange(e.target.checked);
                         dispatch(

@@ -16,9 +16,18 @@ export const saveProjectData = async (data) => {
       features: {
         labels: data.features.labels || false,
         navigation: data.features.navigation || false,
-        toogles: data.features.toogles || false,
+        toggles: data.features.toggles || false,
       },
     };
+
+    // Initialize labels structure if labels feature is enabled
+    if (data.features.labels) {
+      formattedData.labels = {
+        pages: {
+          
+        }
+      }; // Initialize as empty object
+    }
 
     await set(projectRef, formattedData);
     toast.success("project created successfully");
