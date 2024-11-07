@@ -1,82 +1,62 @@
+// src/components/add-label/AddLabelModal.jsx
+
 import React, { useState } from 'react';
-import Modal from '@mui/material/Modal';
-import { Box, Typography, TextField, Button, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Modal, TextField, Button } from '@mui/material';
 
 const AddLabelModal = ({ open, onClose, onAddLabel }) => {
   const [labelName, setLabelName] = useState('');
   const [labelValue, setLabelValue] = useState('');
-  const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleAddLabel = () => {
-    if (labelName && labelValue) {
-      onAddLabel({ name: labelName, value: labelValue });
-      setLabelName('');
-      setLabelValue('');
-      setError('');
-      onClose();
-    } else {
-      setError('Both fields are required.');
+  const handleAdd = () => {
+    if (!labelName || !labelValue) {
+      setErrorMessage('Please fill in all fields.');
+      return;
     }
+
+    onAddLabel({ name: labelName, value: labelValue });
+    setLabelName('');
+    setLabelValue('');
+    setErrorMessage('');
+    onClose();
   };
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box
-        sx={{
+      <div
+        className="flex flex-col items-center justify-center bg-white p-6 rounded-lg"
+        style={{
           position: 'absolute',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          boxShadow: 24,
-          p: 4,
-          borderRadius: 2,
+          outline: 'none',
         }}
       >
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={2}
-        >
-          <Typography variant="h6">Add Label</Typography>
-          <IconButton onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
+        <h2 className="text-2xl mb-4">Add New Label</h2>
         <TextField
           label="Label Name"
-          variant="outlined"
-          fullWidth
           value={labelName}
           onChange={(e) => setLabelName(e.target.value)}
-          margin="normal"
+          variant="outlined"
+          className="mb-4"
+          fullWidth
         />
         <TextField
           label="Label Value"
-          variant="outlined"
-          fullWidth
           value={labelValue}
           onChange={(e) => setLabelValue(e.target.value)}
-          margin="normal"
-        />
-        {error && (
-          <Typography variant="body2" color="error" align="center">
-            {error}
-          </Typography>
-        )}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAddLabel}
+          variant="outlined"
+          className="mb-4"
           fullWidth
-          sx={{ mt: 2 }}
-        >
-          Add
+        />
+        {errorMessage && (
+          <div className="text-red-500 mb-2">{errorMessage}</div>
+        )}
+        <Button variant="contained" color="primary" onClick={handleAdd} fullWidth>
+          Add Label
         </Button>
-      </Box>
+      </div>
     </Modal>
   );
 };

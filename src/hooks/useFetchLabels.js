@@ -12,16 +12,17 @@ export const useFetchLabels = (projectName) => {
     ['labels', projectName],
     () => fetchLabelsFromDatabase(projectName),
     {
+      staleTime: 60000, // Data is fresh for 1 minute
+      cacheTime: 300000, // Cache data for 5 minutes
+      refetchOnWindowFocus: false, // Do not refetch when window gains focus
       onSuccess: (data) => {
-        dispatch(setLabels({ projectName, labels: data || {} }));
+        console.log('Fetched labels data:', data);
+        const labels = data || { pages: {} };
+        dispatch(setLabels({ projectName, labels }));
       },
       onError: (error) => {
         console.error('Error fetching labels:', error);
-        dispatch(setLabels({ projectName, labels: {} }));
-      },
-      initialData: () => {
-        dispatch(setLabels({ projectName, labels: {} }));
-        return {};
+        dispatch(setLabels({ projectName, labels: { pages: {} } }));
       },
     }
   );

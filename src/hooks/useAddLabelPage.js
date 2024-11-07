@@ -10,7 +10,8 @@ export const useAddLabelPage = () => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ projectName, pageName }) => addLabelPageToDatabase(projectName, pageName),
+    ({ projectName, pageName, pagePath }) =>
+      addLabelPageToDatabase(projectName, pageName, pagePath),
     {
       onSuccess: (data, variables) => {
         dispatch(addLabelPage(variables));
