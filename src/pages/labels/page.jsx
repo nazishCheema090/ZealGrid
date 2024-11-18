@@ -1,56 +1,53 @@
-// src/pages/labels/Labels.jsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DashboardListItem from '../../components/common/DashboardListItem';
 import AddIcon from '@mui/icons-material/Add';
-import AddLabelModal from '../../components/add-label/page';
-import AddPageModal from '../../components/add-page/page';
-import { useSelector } from 'react-redux';
-import { useFetchLabels } from '../../hooks/useFetchLabels';
-import { useAddLabelPage } from '../../hooks/useAddLabelPage';
-import { useAddLabel } from '../../hooks/useAddLabel';
-import { useRemoveLabel } from '../../hooks/useRemoveLabel';
-import { useRemoveLabelPage } from '../../hooks/useRemoveLabelPage';
-import { useUpdateLabel } from '../../hooks/useUpdateLabel';
+import { useSelector, useDispatch } from 'react-redux';
 import { CircularProgress } from '@mui/material';
 import { toast } from 'react-hot-toast';
+import {
+  addPage,
+  removePage,
+  updatePage,
+} from '../../redux/actions/pageActions';
+import {
+  fetchLabels,
+  addLabelAsync,
+  removeLabelAsync,
+  updateLabelAsync,
+} from '../../redux/slice/labelsSlice';
+
+// Importing components from directories containing page.jsx
+import AddLabelModal from '../../components/add-label/page';
+import AddPageModal from '../../components/add-page/page';
 
 const Labels = () => {
   const { projectName } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [selectedPageName, setSelectedPageName] = useState(null);
   const [isLabelModalOpen, setIsLabelModalOpen] = useState(false);
   const [isPageModalOpen, setIsPageModalOpen] = useState(false);
 
   // Fetch labels data for the project
-  const { isLoading, isError } = useFetchLabels(projectName);
+  const labelsState = useSelector((state) => state.labels);
+  const { labelsByProject, loading, error } = labelsState;
+
+  useEffect(() => {
+    dispatch(fetchLabels(projectName));
+  }, [dispatch, projectName]);
 
   // Get labels from Redux store
-  const labelsByProject = useSelector((state) => state.labels.labelsByProject);
   const projectData = labelsByProject[projectName] || { pages: {} };
-
   const pages = projectData.pages || {};
 
   // Existing page names for validation
   const existingPageNames = Object.keys(pages);
 
-  // Mutations
-  const addLabelPageMutation = useAddLabelPage();
-  const addLabelMutation = useAddLabel();
-  const removeLabelMutation = useRemoveLabel();
-  const removeLabelPageMutation = useRemoveLabelPage();
-  const updateLabelMutation = useUpdateLabel();
-
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Logging for debugging
-  console.log('Labels by Project:', labelsByProject);
-  console.log('Project Data:', projectData);
-  console.log('Pages:', pages);
-
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center">
         <CircularProgress
@@ -63,136 +60,122 @@ const Labels = () => {
     );
   }
 
-  if (isError) {
+  if (error) {
     return (
       <div className="flex items-center justify-center">
-        <p>Error loading labels.</p>
+        <p>Error loading labels: {error}</p>
       </div>
     );
   }
 
   const handleAddPage = (newPage) => {
     const { pageName, pagePath } = newPage;
-
-    addLabelPageMutation.mutate(
-      { projectName, pageName, pagePath },
-      {
-        onSuccess: () => {
-          // Set the selected page to the newly added page
-          setSelectedPageName(pageName);
-          setErrorMessage('');
-          toast.success(`Page "${pageName}" added successfully`);
-        },
-        onError: (error) => {
-          console.error('Error adding label page:', error);
-          setErrorMessage('Failed to add page. Please try again.');
-        },
-      }
-    );
-  };
-
-  const handleAddLabel = (newLabel) => {
-    if (selectedPageName) {
-      const { name: labelKey, value: labelValue } = newLabel;
-      const selectedPage = pages[selectedPageName];
-      // Check for duplicate label keys within the page
-      if (selectedPage.labels?.[labelKey]) {
-        toast.error(`Label "${labelKey}" already exists on this page.`);
-      } else {
-        addLabelMutation.mutate(
-          {
-            projectName,
-            pageName: selectedPageName,
-            labelKey,
-            labelValue,
-          },
-          {
-            onSuccess: () => {
-              toast.success(`Label "${labelKey}" added successfully`);
-            },
-            onError: (error) => {
-              console.error('Error adding label:', error);
-              toast.error('Failed to add label. Please try again.');
-            },
-          }
-        );
-      }
-    }
-  };
-
-  const handleUpdateLabel = (labelKey, currentValue) => {
-    if (selectedPageName) {
-      const newLabelValue = prompt('Enter new label value:', currentValue);
-      if (newLabelValue !== null) {
-        updateLabelMutation.mutate(
-          {
-            projectName,
-            pageName: selectedPageName,
-            labelKey,
-            newLabelValue,
-          },
-          {
-            onSuccess: () => {
-              toast.success(`Label "${labelKey}" updated successfully`);
-            },
-            onError: (error) => {
-              console.error('Error updating label:', error);
-              toast.error('Failed to update label. Please try again.');
-            },
-          }
-        );
-      }
-    }
-  };
-
-  const handleRemoveLabel = (labelKey) => {
-    if (selectedPageName) {
-      const confirmDelete = window.confirm(
-        `Are you sure you want to delete the label "${labelKey}"?`
-      );
-      if (confirmDelete) {
-        removeLabelMutation.mutate(
-          {
-            projectName,
-            pageName: selectedPageName,
-            labelKey,
-          },
-          {
-            onSuccess: () => {
-              toast.success(`Label "${labelKey}" removed successfully`);
-            },
-            onError: (error) => {
-              console.error('Error removing label:', error);
-              toast.error('Failed to remove label. Please try again.');
-            },
-          }
-        );
-      }
-    }
+    dispatch(addPage({ projectName, pageName, pagePath }))
+      .then(() => {
+        setSelectedPageName(pageName);
+        setErrorMessage('');
+        setIsPageModalOpen(false);
+        toast.success(`Page "${pageName}" added successfully`);
+      })
+      .catch((error) => {
+        console.error('Error adding page:', error);
+        setErrorMessage('Failed to add page. Please try again.');
+        toast.error('Failed to add page. Please try again.');
+      });
   };
 
   const handleRemovePage = (pageName) => {
     const confirmDelete = window.confirm(
-      `Are you sure you want to delete the page "${pageName}"? This will remove all labels within this page.`
+      `Are you sure you want to delete the page "${pageName}"? This will remove it from all features.`
     );
     if (confirmDelete) {
-      removeLabelPageMutation.mutate(
-        { projectName, pageName },
-        {
-          onSuccess: () => {
-            if (selectedPageName === pageName) {
-              setSelectedPageName(null);
-            }
-            setErrorMessage('');
-            toast.success(`Page "${pageName}" removed successfully`);
-          },
-          onError: (error) => {
-            console.error('Error removing label page:', error);
-            setErrorMessage('Failed to delete page. Please try again.');
-            toast.error('Failed to delete page. Please try again.');
-          },
-        }
+      dispatch(removePage({ projectName, pageName }))
+        .then(() => {
+          if (selectedPageName === pageName) {
+            setSelectedPageName(null);
+          }
+          setErrorMessage('');
+          toast.success(`Page "${pageName}" removed successfully`);
+        })
+        .catch((error) => {
+          console.error('Error removing page:', error);
+          setErrorMessage('Failed to delete page. Please try again.');
+          toast.error('Failed to delete page. Please try again.');
+        });
+    }
+  };
+
+  const handleAddLabel = (newLabel) => {
+    if (selectedPageName) {
+      const { labelName, labelValue } = newLabel;
+      const selectedPage = pages[selectedPageName];
+      // Check for duplicate label names within the page
+      if (selectedPage.labels?.[labelName]) {
+        toast.error(`Label "${labelName}" already exists on this page.`);
+      } else {
+        dispatch(
+          addLabelAsync({
+            projectName,
+            pageName: selectedPageName,
+            labelName,
+            labelValue,
+          })
+        )
+          .then(() => {
+            toast.success(`Label "${labelName}" added successfully`);
+          })
+          .catch((error) => {
+            console.error('Error adding label:', error);
+            toast.error('Failed to add label. Please try again.');
+          });
+      }
+    }
+  };
+
+  const handleUpdateLabel = (labelName, currentValue) => {
+    if (selectedPageName) {
+      const newLabelValue = prompt('Enter new label value:', currentValue);
+      if (newLabelValue !== null) {
+        dispatch(
+          updateLabelAsync({
+            projectName,
+            pageName: selectedPageName,
+            labelName,
+            newLabelValue,
+          })
+        )
+          .then(() => {
+            toast.success(`Label "${labelName}" updated successfully`);
+          })
+          .catch((error) => {
+            console.error('Error updating label:', error);
+            toast.error('Failed to update label. Please try again.');
+          });
+      }
+    }
+  };
+
+  const handleRemoveLabel = (labelName) => {
+    if (selectedPageName) {
+      const confirmDelete = window.confirm(
+        `Are you sure you want to delete the label "${labelName}"?`
       );
+      if (confirmDelete) {
+        dispatch(
+          removeLabelAsync({
+            projectName,
+            pageName: selectedPageName,
+            labelName,
+          })
+        )
+          .then(() => {
+            toast.success(`Label "${labelName}" removed successfully`);
+          })
+          .catch((error) => {
+            console.error('Error removing label:', error);
+            toast.error('Failed to remove label. Please try again.');
+          });
+      }
     }
   };
 
@@ -226,9 +209,7 @@ const Labels = () => {
         </span>
       </div>
 
-      {errorMessage && (
-        <div className="text-red-500 mb-2">{errorMessage}</div>
-      )}
+      {errorMessage && <div className="text-red-500 mb-2">{errorMessage}</div>}
 
       <div className="flex flex-col max-w-[1000px] gap-y-2 mt-5">
         {!selectedPage &&
@@ -256,14 +237,14 @@ const Labels = () => {
           (selectedPage.labels &&
           Object.keys(selectedPage.labels).length > 0 ? (
             Object.entries(selectedPage.labels).map(
-              ([labelKey, labelValue]) => (
+              ([labelName, labelValue]) => (
                 <DashboardListItem
-                  key={labelKey}
-                  name={labelKey}
+                  key={labelName}
+                  name={labelName}
                   value={labelValue}
                   isLabels={true}
-                  onDelete={() => handleRemoveLabel(labelKey)}
-                  onUpdate={() => handleUpdateLabel(labelKey, labelValue)}
+                  onDelete={() => handleRemoveLabel(labelName)}
+                  onUpdate={() => handleUpdateLabel(labelName, labelValue)}
                 />
               )
             )
@@ -299,18 +280,22 @@ const Labels = () => {
       )}
 
       {/* Modals */}
-      <AddLabelModal
-        open={isLabelModalOpen}
-        onClose={() => setIsLabelModalOpen(false)}
-        onAddLabel={handleAddLabel}
-      />
+      {isLabelModalOpen && (
+        <AddLabelModal
+          open={isLabelModalOpen}
+          onClose={() => setIsLabelModalOpen(false)}
+          onAddLabel={handleAddLabel}
+        />
+      )}
 
-      <AddPageModal
-        open={isPageModalOpen}
-        onClose={() => setIsPageModalOpen(false)}
-        onAddPage={handleAddPage}
-        existingPageNames={existingPageNames} // Pass existing page names for validation
-      />
+      {isPageModalOpen && (
+        <AddPageModal
+          open={isPageModalOpen}
+          onClose={() => setIsPageModalOpen(false)}
+          onAddPage={handleAddPage}
+          existingPageNames={existingPageNames} // Pass existing page names for validation
+        />
+      )}
     </div>
   );
 };

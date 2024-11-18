@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
-import { Modal, TextField, Button } from '@mui/material';
+import { Modal, TextField, Button, FormControlLabel, Checkbox } from '@mui/material';
 
-const AddLabelModal = ({ open, onClose, onAddLabel }) => {
-  const [labelName, setLabelName] = useState('');
-  const [labelValue, setLabelValue] = useState('');
+const AddToggleModal = ({ open, onClose, onAddToggle }) => {
+  const [toggleName, setToggleName] = useState('');
+  const [toggleValue, setToggleValue] = useState('');
+  const [isActive, setIsActive] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleAdd = () => {
-    if (!labelName || !labelValue) {
+    if (!toggleName || !toggleValue) {
       setErrorMessage('Please fill in all fields.');
       return;
     }
 
-    onAddLabel({ labelName, labelValue });
-    setLabelName('');
-    setLabelValue('');
+    onAddToggle({ toggleName, toggleValue, isActive });
+    setToggleName('');
+    setToggleValue('');
+    setIsActive(false);
     setErrorMessage('');
     onClose();
   };
@@ -31,22 +33,32 @@ const AddLabelModal = ({ open, onClose, onAddLabel }) => {
           outline: 'none',
         }}
       >
-        <h2 className="text-2xl mb-4">Add New Label</h2>
+        <h2 className="text-2xl mb-4">Add New Toggle</h2>
         <TextField
-          label="Label Name"
-          value={labelName}
-          onChange={(e) => setLabelName(e.target.value)}
+          label="Toggle Name"
+          value={toggleName}
+          onChange={(e) => setToggleName(e.target.value)}
           variant="outlined"
           className="mb-4"
           fullWidth
         />
         <TextField
-          label="Label Value"
-          value={labelValue}
-          onChange={(e) => setLabelValue(e.target.value)}
+          label="Toggle Value"
+          value={toggleValue}
+          onChange={(e) => setToggleValue(e.target.value)}
           variant="outlined"
           className="mb-4"
           fullWidth
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isActive}
+              onChange={(e) => setIsActive(e.target.checked)}
+              color="primary"
+            />
+          }
+          label="Is Active"
         />
         {errorMessage && (
           <div className="text-red-500 mb-2">{errorMessage}</div>
@@ -57,11 +69,11 @@ const AddLabelModal = ({ open, onClose, onAddLabel }) => {
           onClick={handleAdd}
           fullWidth
         >
-          Add Label
+          Add Toggle
         </Button>
       </div>
     </Modal>
   );
 };
 
-export default AddLabelModal;
+export default AddToggleModal;
